@@ -1,0 +1,150 @@
+/* Component Product Features Highlight */
+.product-features-highlight {
+  padding-top: var(--pt);
+  padding-bottom: var(--pb);
+  background-color: var(--bg-color);
+}
+
+.product-features-highlight .container {
+  max-width: var(--container-width, 1200px);
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.product-features-highlight .feature-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+/* Mobile Layout (Default) */
+.product-features-highlight .feature-items {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
+}
+
+.product-features-highlight .feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+}
+
+.product-features-highlight .feature-item__icon {
+  flex-shrink: 0;
+  width: var(--icon-size, 50px);
+  height: var(--icon-size, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--icon-color);
+}
+
+.product-features-highlight .feature-item__icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  stroke-width: 1.5px;
+}
+
+.product-features-highlight .feature-item__content {
+  flex: 1;
+}
+
+.product-features-highlight .feature-item__title {
+  font-size: var(--title-size, 16px);
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--title-color);
+  line-height: 1.3;
+}
+
+.product-features-highlight .feature-item__text {
+  font-size: var(--text-size, 14px);
+  color: var(--text-color);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.product-features-highlight .feature-image {
+  width: 100%;
+  max-width: 400px; /* Limit mobile image size */
+  margin: 0 auto;
+  order: 2; /* Ensure image is below text on mobile if desired, or adjust as needed */
+}
+
+.product-features-highlight .feature-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Order specific for Mobile: Text Top, Image Bottom */
+.product-features-highlight .feature-grid .feature-image {
+  order: 3;
+}
+.product-features-highlight .feature-grid .feature-col-left {
+  order: 1;
+}
+.product-features-highlight .feature-grid .feature-col-right {
+  order: 2;
+}
+
+/* Desktop Layout */
+@media (min-width: 992px) {
+  .product-features-highlight .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr; /* Left Icons | Image | Right Icons */
+    align-items: center;
+    gap: 40px;
+  }
+
+  .product-features-highlight .feature-grid .feature-image {
+    order: 2; /* Image in center */
+    max-width: 100%;
+  }
+
+  .product-features-highlight .feature-grid .feature-col-left {
+    order: 1;
+  }
+
+  .product-features-highlight .feature-grid .feature-col-right {
+    order: 3;
+  }
+
+  /* Left Column Alignment */
+  .product-features-highlight .feature-col-left .feature-item {
+    flex-direction: row-reverse; /* Icon on the right side of the text block for the left column? 
+                                        Actually typically "Icon Left" is standard, but if "surrounding", 
+                                        left items often align right towards the image. */
+    text-align: right;
+  }
+
+  .product-features-highlight .feature-col-left .feature-item__content {
+    align-items: flex-end;
+  }
+
+  /* Right Column Alignment */
+  .product-features-highlight .feature-col-right .feature-item {
+    flex-direction: row; /* Icon Left */
+    text-align: left;
+  }
+
+  .product-features-highlight .feature-item {
+    margin-bottom: 40px;
+  }
+  .product-features-highlight .feature-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .product-features-highlight .feature-item__title {
+    font-size: var(--title-size-desktop, 18px);
+  }
+  .product-features-highlight .feature-item__text {
+    font-size: var(--text-size-desktop, 15px);
+  }
+}

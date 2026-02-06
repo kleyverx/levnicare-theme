@@ -1,0 +1,55 @@
+<script>
+  if (window.mwMarketingOffersHelper) {
+    class mwCustomTheme {
+      openCartDrawer(cart) {
+        setTimeout(() => {
+          const cartIcon = document.querySelector('.header__icon.header__icon--cart.link.link--text.focus-inset.cart-icon-bubble.text-center');
+          if (cartIcon) {
+            cartIcon.click();
+            console.log('Cart icon clicked after 2 seconds');
+          }
+        }, 2000);
+
+        return;
+
+        //window.location.href = "/cart";
+      }
+
+      close() {
+      }
+
+      updateCartBubble(sections) {
+      }
+
+      getButtonLoadingClassName() {
+        return "loading";
+      }
+    }
+
+    const mwTheme = new mwCustomTheme();
+
+    window.mwMarketingOffersOptions.setThemeSections("mini-cart,main-cart");
+
+    window.mwMarketingOffersOptions.theme = mwTheme;
+
+    window.mwMarketingOffersOptions.addSelector('add_to_cart', '.productView-buttons .form .product-form__submit');
+  }
+
+// ---------- sticky-add-to-cart--- start ------
+      
+      if (document.querySelector("sticky-add-to-cart")) {
+     
+        const stickAddtoCart = document.querySelector("sticky-add-to-cart .sticky-actions-row .product-form__submit");
+  
+        stickAddtoCart.addEventListener("click", (event) => {
+	      const defaultAddtoCart = document.querySelector(".product-form__buttons .product-form__submit");
+          event.stopImmediatePropagation();
+          event.preventDefault();
+  
+          defaultAddtoCart.click();
+        }) 
+    }
+    
+// ---------- sticky-add-to-cart--- end ------
+         
+</script>

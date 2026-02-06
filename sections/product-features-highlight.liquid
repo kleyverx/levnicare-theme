@@ -1,0 +1,232 @@
+{{ 'component-product-features.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      --title-color: {{ section.settings.color_title }};
+      --text-color: {{ section.settings.color_text }};
+      --icon-color: {{ section.settings.color_icon }};
+      --bg-color: {{ section.settings.bg_color }};
+      --title-size: {{ section.settings.title_size_mb }}px;
+      --text-size: {{ section.settings.text_size_mb }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+          padding-top: {{ section.settings.padding_top }}px;
+          padding-bottom: {{ section.settings.padding_bottom }}px;
+          --title-size-desktop: {{ section.settings.title_size }}px;
+          --text-size-desktop: {{ section.settings.text_size }}px;
+      }
+  }
+{%- endstyle -%}
+
+<div class="product-features-highlight section-{{ section.id }}-padding">
+  <div class="container">
+    <div class="feature-grid">
+      {%- comment -%} Determine split index for blocks {%- endcomment -%}
+      {%- assign block_count = section.blocks.size -%}
+      {%- assign half_count = block_count | divided_by: 2.0 | ceil -%}
+
+      <div class="feature-items feature-col-left">
+        {%- for block in section.blocks limit: half_count -%}
+          <div class="feature-item" {{ block.shopify_attributes }}>
+            <div class="feature-item__icon">
+              {%- if block.settings.icon_svg != blank -%}
+                {{ block.settings.icon_svg }}
+              {%- endif -%}
+            </div>
+            <div class="feature-item__content">
+              <h3 class="feature-item__title">{{ block.settings.title }}</h3>
+              <div class="feature-item__text">{{ block.settings.text }}</div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="feature-image">
+        {%- if section.settings.image != blank -%}
+          {%- assign widths = '165, 360, 535, 750, 1070, 1500' -%}
+          {{
+            section.settings.image
+            | image_url: width: 1500
+            | image_tag:
+              loading: 'lazy',
+              sizes: '(min-width: 1100px) 535px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)',
+              widths: widths
+          }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      <div class="feature-items feature-col-right">
+        {%- for block in section.blocks offset: half_count -%}
+          <div class="feature-item" {{ block.shopify_attributes }}>
+            <div class="feature-item__icon">
+              {%- if block.settings.icon_svg != blank -%}
+                {{ block.settings.icon_svg }}
+              {%- endif -%}
+            </div>
+            <div class="feature-item__content">
+              <h3 class="feature-item__title">{{ block.settings.title }}</h3>
+              <div class="feature-item__text">{{ block.settings.text }}</div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Features",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main Image"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "color_icon",
+      "label": "Icon Color",
+      "default": "#7F48B0"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size (Desktop)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Text Size (Desktop)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "title_size_mb",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "icon_svg",
+          "label": "SVG Icon Code",
+          "info": "Paste the SVG code here. Ensure it has no width/height or uses '1em'."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Description of the feature.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Features Highlight",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Safety Technology",
+            "text": "<p>Anti-scratch blade designed to protect skin.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Long Battery",
+            "text": "<p>Up to 80 minutes of usage on a full charge.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Digital Display",
+            "text": "<p>Real-time battery level and mode indicator.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Wet & Dry",
+            "text": "<p>Adaptable for different routines.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
