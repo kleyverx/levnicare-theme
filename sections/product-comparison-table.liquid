@@ -1,0 +1,481 @@
+{%- style -%}
+  .comp-v3-id-{{ section.id }} {
+    --pt: {{ section.settings.padding_top }}px;
+    --pb: {{ section.settings.padding_bottom }}px;
+    --bg-color: {{ section.settings.bg_color }};
+    --container-width: {{ section.settings.container_width }}px;
+    --title-size: {{ section.settings.title_size }}px;
+    --wave-color: {{ section.settings.wave_color | default: '#e05060' }};
+    --title-color: {{ section.settings.title_color | default: '#000000' }};
+    --subtitle-color: {{ section.settings.subtitle_color | default: '#666666' }};
+    --mint-bg: {{ section.settings.col_body_bg | default: '#c8f7d8' }};
+    --mint-header: {{ section.settings.col_header_bg | default: '#b8f5ca' }};
+    --green-badge: {{ section.settings.col_badge_bg | default: '#25a85b' }};
+    --badge-text-color: {{ section.settings.col_badge_text | default: '#ffffff' }};
+    --pink-border: {{ section.settings.border_color | default: '#f0a0a8' }};
+  }
+{%- endstyle -%}
+
+{{ 'component-comparison-table.css' | asset_url | stylesheet_tag }}
+
+{%- capture seal_svg -%}
+<svg class="comp-v3-seal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M49.58,100.18l-11.1-7.21s-.08-.04-.13-.04c0,0-.01,0-.02,0-2.95.21-6.84.47-10.75.56-.39,0-.73.05-1.03.08-.26.03-.49.05-.7.05-.59,0-1.05-.2-1.75-1.27-1.04-1.58-1.92-3.56-2.76-5.48-.8-1.82-1.63-3.69-2.61-5.26-1.6-1.15-3.7-2.06-5.73-2.93-2.15-.92-4.38-1.88-5.86-3.04-.73-.57-.69-1.81-.66-2.72v-.15c.05-1.44.17-2.92.29-4.34.19-2.3.39-4.68.26-7.02-.94-1.69-2.06-3.26-3.13-4.79-1.13-1.6-2.3-3.26-3.22-4.91l-.12-.22c-.6-1.06-.78-1.39-.18-2.6.83-1.69,2.14-3.48,3.41-5.2,1.23-1.67,2.5-3.4,3.37-5.09,0-2.24-.17-4.4-.33-6.49-.13-1.75-.27-3.56-.33-5.34-.06-1.8.35-2.05,1.86-2.95,1.62-.97,3.44-1.81,5.21-2.62,1.69-.78,3.43-1.58,5.01-2.5,1.15-1.7,2.01-3.66,2.85-5.56.82-1.87,1.68-3.8,2.71-5.35.7-1.06,1.22-1.35,2.43-1.35h.27c1.96.06,3.97.23,5.91.39,1.85.15,3.76.31,5.64.38,0,0,0,0,0,0,.05,0,.09-.01.13-.04L49.07.26l1.42-.23,11.03,7.15s.08.04.13.04c0,0,12.36-.77,12.36-.77l1.59.74,5.86,11.33c1.75,1.26,3.83,2.18,5.84,3.07,1.94.86,3.77,1.67,5.27,2.68.79.53,1.16,1.22,1.14,2.09-.04,1.92-.21,3.9-.37,5.81-.18,2.08-.36,4.23-.38,6.34,0,.05.01.09.04.13l7,10.71v1.63l-7,10.5s-.04.09-.04.14c.06,1.4.3,7,.35,8.41.02.42.07.88.13,1.37.2,1.68.42,3.59-.87,4.47-1.5,1.01-3.3,1.8-5.2,2.64-2.08.91-4.24,1.86-5.96,3.13-1.04,1.7-1.87,3.51-2.68,5.27-.8,1.74-1.63,3.54-2.58,5.13-.65,1.08-1.01,1.67-2.36,1.67-2.05,0-4.17-.2-6.22-.38-1.94-.18-3.95-.36-5.91-.39h0s-.09.01-.13.04l-10.91,7.2h-1.04ZM49.72,95.85s.08.04.13.04c.01,0,.03,0,.05,0l.58-.12,10.05-6.48s12.38.45,12.38.45c.09,0,.16-.05.21-.12l5.75-10.86,10.86-5.59c.08-.04.13-.13.13-.22l-.55-12.43,6.56-10.37c.05-.08.05-.17,0-.25l-6.56-10.24.51-12.53c0-.09-.05-.18-.13-.22l-10.82-5.49-5.75-10.86c-.04-.08-.12-.12-.21-.12,0,0-12.38.45-12.38.45l-10.25-6.58s-.08-.04-.13-.04-.09.01-.12.04l-10.36,6.58s-12.54-.51-12.54-.51c-.09,0-.17.05-.21.13l-5.5,10.82-10.91,5.6c-.08.04-.13.12-.13.21l.47,12.49-6.53,10.1s-.04.1-.04.15l.07.63,6.5,10.06-.47,12.49c0,.09.05.17.13.22l10.82,5.49,5.59,10.92c.04.08.12.13.21.13,0,0,12.54-.51,12.54-.51l10.05,6.57Z" fill="#F42B23"/><path d="M50.07,81.17c-17.14,0-31.08-13.94-31.08-31.08s13.94-31.08,31.08-31.08,31.08,13.94,31.08,31.08-13.94,31.08-31.08,31.08ZM50.07,22.73c-15.08,0-27.36,12.27-27.36,27.36s12.27,27.36,27.36,27.36,27.36-12.27,27.36-27.36-12.27-27.36-27.36-27.36Z" fill="#F42B23"/><path d="M46.04,59.77c-.48,0-.97-.23-1.49-.71-1.15-1.48-2.69-2.91-4.17-4.29-1.41-1.31-2.88-2.67-3.96-4.04-.74-.94-.98-1.93-.64-2.63.27-.55.87-.86,1.69-.86.21,0,.44.02.68.06l7.93,7.85s.1.07.16.07.12-.02.16-.06l13.49-12.87c.35-.14.72-.52,1.07-.89.37-.39.76-.79,1.13-.87.22-.05.43-.07.63-.07.76,0,1.4.35,1.7.94.32.62.22,1.37-.27,2.06-2.51,2.2-5.01,4.69-7.42,7.1-2.7,2.69-5.49,5.48-8.35,7.91-.9.77-1.59,1.31-2.34,1.31Z" fill="#F42B23"/></svg>
+{%- endcapture -%}
+
+<section class="comp-v3-section comp-v2-id-{{ section.id }} comp-v3-id-{{ section.id }}">
+  <div class="comp-v3-container">
+    <div class="comp-v3-header">
+      {%- if section.settings.heading != blank -%}
+        <h2>{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p>{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="comp-v3-slider-wrap">
+      {%- if section.blocks.size > 1 -%}
+        <button class="comp-v3-nav-btn comp-v3-prev prev-{{ section.id }}" aria-label="Anterior">
+          <svg viewBox="0 0 14 10" fill="none" class="icon icon-prev" style="transform: scaleX(-1);">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z" fill="currentColor"></path>
+          </svg>
+        </button>
+        <button class="comp-v3-nav-btn comp-v3-next next-{{ section.id }}" aria-label="Siguiente">
+          <svg viewBox="0 0 14 10" fill="none" class="icon icon-next">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.537.808a.5.5 0 01.817-.162l4 4a.5.5 0 010 .708l-4 4a.5.5 0 11-.708-.708L11.793 5.5H1a.5.5 0 010-1h10.793L8.646 1.354a.5.5 0 01-.109-.546z" fill="currentColor"></path>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      <div class="comp-v3-slider-view">
+        <div class="comp-v3-track track-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign product_ours = block.settings.product_ours
+              assign product_img = block.settings.product_img | default: product_ours.featured_image
+              assign product_name = block.settings.product_name | default: product_ours.title | default: 'Levnicare'
+              assign comp_name = block.settings.comp_name | default: 'Otros'
+            -%}
+            <div class="comp-v3-slide" {{ block.shopify_attributes }}>
+              <div class="comp-v3-wave">
+                <svg viewBox="0 0 1000 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Wave 1 (Back) -->
+                  <path d="M1000,300 C850,150 700,80 500,180 C300,280 150,150 0,300 L0,300 L1000,300 Z" fill="{{ section.settings.wave_color_1 | default: '#e05060' }}" opacity="0.4" stroke="none" stroke-width="0"/>
+                  <!-- Wave 2 (Middle) - More wavy but carefully positioned -->
+                  <path d="M1000,300 C900,250 800,50 700,150 C600,250 500,100 400,200 C300,300 150,50 0,300 L0,300 L1000,300 Z" fill="{{ section.settings.wave_color_2 | default: '#e05060' }}" opacity="0.6" stroke="none" stroke-width="0"/>
+                  <!-- Wave 3 (Front) -->
+                  <path d="M1000,300 C800,280 600,150 400,250 C250,320 100,180 0,300 L0,300 L1000,300 Z" fill="{{ section.settings.wave_color_3 | default: '#e05060' }}" opacity="0.8" stroke="none" stroke-width="0"/>
+                </svg>
+              </div>
+
+              <div class="comp-v3-card">
+                <table class="comp-v3-table">
+                  <colgroup>
+                    <col class="col-label">
+                    <col class="col-ours">
+                    <col class="col-them">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th><!-- Spacer --></th>
+                      <th class="th-ours">
+                        <div class="comp-v3-badge">{{ section.settings.badge_text }}</div>
+                        {%- if product_img != blank -%}
+                          {{
+                            product_img
+                            | image_url: width: 500, height: 570, crop: 'center'
+                            | image_tag: class: 'comp-v3-img-pop comp-v3-img-ours'
+                          }}
+                        {%- endif -%}
+                        {{ product_name }}
+                      </th>
+                      <th class="th-them">
+                        {%- if block.settings.comp_img != blank -%}
+                          {{
+                            block.settings.comp_img
+                            | image_url: width: 500, height: 570, crop: 'center'
+                            | image_tag: class: 'comp-v3-img-pop comp-v3-img-comp'
+                          }}
+                        {%- endif -%}
+                        {{ comp_name }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {%- for i in (1..4) -%}
+                      {%- liquid
+                        assign label_key = 'feature_' | append: i | append: '_label'
+                        assign ours_key = 'feature_' | append: i | append: '_ours'
+                        assign theirs_key = 'feature_' | append: i | append: '_theirs'
+                        assign label = block.settings[label_key]
+                      -%}
+                      {%- if label != blank -%}
+                        <tr>
+                          <td class="td-label">{{ label }}</td>
+                          <td class="td-ours">
+                            {%- if block.settings[ours_key] -%}
+                              {{ seal_svg }}
+                            {%- else -%}
+                              <span class="comp-v3-x">✕</span>
+                            {%- endif -%}
+                          </td>
+                          <td>
+                            {%- if block.settings[theirs_key] -%}
+                              {{ seal_svg }}
+                            {%- else -%}
+                              <span class="comp-v3-x">✕</span>
+                            {%- endif -%}
+                          </td>
+                        </tr>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- if section.blocks.size > 1 -%}
+        <div class="comp-v3-dots dots-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            <span class="comp-v3-dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}"></span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const section = document.querySelector('.comp-v3-id-{{ section.id }}');
+    const track = section.querySelector('.track-{{ section.id }}');
+    const prev = section.querySelector('.prev-{{ section.id }}');
+    const next = section.querySelector('.next-{{ section.id }}');
+    const dots = section.querySelectorAll('.comp-v3-dot');
+
+    if (!track) return;
+
+    let index = 0;
+    const slides = Array.from(track.children);
+
+    const update = () => {
+      index = Math.max(0, Math.min(index, slides.length - 1));
+      track.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('is-active', i === index);
+        slide.classList.toggle('is-past', i < index);
+        slide.classList.toggle('is-future', i > index);
+      });
+    };
+
+    update();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            section.classList.add('is-visible');
+            observer.unobserve(section);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(section);
+
+    if (prev)
+      prev.addEventListener('click', () => {
+        index--;
+        update();
+      });
+    if (next)
+      next.addEventListener('click', () => {
+        index++;
+        update();
+      });
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        index = parseInt(dot.dataset.index);
+        update();
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Tabla Comparativa 1v1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "¿POR QUÉ ELEGIRNOS?"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Compara nuestros productos con la competencia"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Texto del Badge",
+      "default": "MEJOR OPCIÓN"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño Título",
+      "default": 38
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color Título",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color Subtítulo",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Estilo Columna 'Mejor Opción'"
+    },
+    {
+      "type": "color",
+      "id": "col_header_bg",
+      "label": "Fondo Cabecera",
+      "default": "#b8f5ca"
+    },
+    {
+      "type": "color",
+      "id": "col_body_bg",
+      "label": "Fondo Cuerpo Columna",
+      "default": "#c8f7d8"
+    },
+    {
+      "type": "color",
+      "id": "col_badge_bg",
+      "label": "Fondo Badge (Mejor Opción)",
+      "default": "#25a85b"
+    },
+    {
+      "type": "color",
+      "id": "col_badge_text",
+      "label": "Color Texto Badge",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color de Bordes",
+      "default": "#f0a0a8"
+    },
+    {
+      "type": "header",
+      "content": "Estilo General"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo Sección",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "wave_color_1",
+      "label": "Color Onda 1 (Fondo)",
+      "default": "#e05060"
+    },
+    {
+      "type": "color",
+      "id": "wave_color_2",
+      "label": "Color Onda 2 (Media)",
+      "default": "#e05060"
+    },
+    {
+      "type": "color",
+      "id": "wave_color_3",
+      "label": "Color Onda 3 (Frente)",
+      "default": "#e05060"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 700,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "label": "Ancho Máximo",
+      "default": 910
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Espacio Superior",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Espacio Inferior",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_pair",
+      "name": "Pareja Comparativa (1v1)",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Nuestro Producto"
+        },
+        {
+          "type": "product",
+          "id": "product_ours",
+          "label": "Seleccionar Producto"
+        },
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Nombre Manual",
+          "info": "Si no seleccionas un producto arriba"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_img",
+          "label": "Imagen Manual",
+          "info": "Si no seleccionas un producto arriba"
+        },
+        {
+          "type": "header",
+          "content": "Competidor"
+        },
+        {
+          "type": "text",
+          "id": "comp_name",
+          "label": "Nombre del Competidor",
+          "default": "Otras marcas"
+        },
+        {
+          "type": "image_picker",
+          "id": "comp_img",
+          "label": "Imagen del Competidor"
+        },
+        {
+          "type": "header",
+          "content": "Características (Máx 4)"
+        },
+        {
+          "type": "text",
+          "id": "feature_1_label",
+          "label": "Característica 1",
+          "default": "Ingredientes Naturales"
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_1_ours",
+          "label": "¿La tenemos nosotros?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_1_theirs",
+          "label": "¿La tiene la competencia?",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "feature_2_label",
+          "label": "Característica 2",
+          "default": "Dermatológicamente Probado"
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_2_ours",
+          "label": "¿La tenemos nosotros?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_2_theirs",
+          "label": "¿La tiene la competencia?",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "feature_3_label",
+          "label": "Característica 3",
+          "default": "Envío Gratis"
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_3_ours",
+          "label": "¿La tenemos nosotros?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_3_theirs",
+          "label": "¿La tiene la competencia?",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "feature_4_label",
+          "label": "Característica 4"
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_4_ours",
+          "label": "¿La tenemos nosotros?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "feature_4_theirs",
+          "label": "¿La tiene la competencia?",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tabla Comparativa 1v1",
+      "blocks": [
+        {
+          "type": "comparison_pair"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

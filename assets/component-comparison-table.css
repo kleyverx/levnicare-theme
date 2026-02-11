@@ -1,0 +1,454 @@
+/* ==========================================================================
+   Levnicare Comparison Table V3 (Pixel-Perfect Alignment)
+   ========================================================================== */
+
+.comp-v3-section {
+  background: var(--bg-color, #fff);
+  padding: var(--pt) 0 var(--pb);
+}
+
+.comp-v3-container {
+  max-width: var(--container-width, 910px);
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+}
+
+/* Header */
+.comp-v3-header {
+  text-align: center;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.is-visible .comp-v3-header {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.comp-v3-header h2 {
+  font-size: var(--title-size, 38px);
+  color: var(--title-color, #000);
+  font-weight: 900;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+.comp-v3-header p {
+  font-size: 16px;
+  color: var(--subtitle-color, #666);
+  margin: 0;
+}
+
+/* Slider Controls */
+.comp-v3-nav-btn {
+  position: absolute;
+  top: 65%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: #fff;
+  border: 1px solid var(--pink-border);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #e05060;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+.comp-v3-nav-btn:hover {
+  background: var(--mint-header);
+}
+.comp-v3-nav-btn svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.comp-v3-prev {
+  left: 0;
+}
+.comp-v3-next {
+  right: 0;
+}
+
+/* Carousel Track */
+.comp-v3-slider-view {
+  overflow: hidden;
+  width: 100%;
+}
+.comp-v3-track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.comp-v3-slide {
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 300px 10px 10px;
+  position: relative;
+}
+
+/* Background Wave per Slide */
+.comp-v3-wave {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(
+    100% - 80px
+  ); /* Clearing the 20px rounded corners on both sides */
+  height: 300px; /* Matches slide padding-top exactly */
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.comp-v3-wave svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Table Card */
+.comp-v3-card {
+  border: 1px solid var(--pink-border);
+  border-radius: 20px;
+  background: #fff;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  overflow: visible;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease,
+    opacity 0.5s ease;
+  opacity: 0.6;
+}
+
+.is-active .comp-v3-card {
+  opacity: 1;
+}
+
+.comp-v3-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* Row Stagger Animation */
+.comp-v3-table tr {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.is-active .comp-v3-table tr {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.is-active .comp-v3-table tr:nth-child(1) {
+  transition-delay: 0.2s;
+}
+.is-active .comp-v3-table tr:nth-child(2) {
+  transition-delay: 0.3s;
+}
+.is-active .comp-v3-table tr:nth-child(3) {
+  transition-delay: 0.4s;
+}
+.is-active .comp-v3-table tr:nth-child(4) {
+  transition-delay: 0.5s;
+}
+.is-active .comp-v3-table tr:nth-child(5) {
+  transition-delay: 0.6s;
+}
+
+.comp-v3-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+/* Column Widths */
+.col-label {
+  width: 40%;
+}
+.col-ours {
+  width: 30%;
+}
+.col-them {
+  width: 30%;
+}
+
+/* Cells */
+.comp-v3-table th,
+.comp-v3-table td {
+  height: 75px;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #fceef0;
+  vertical-align: middle;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Round corner cells to match card border-radius */
+.comp-v3-table th:first-child {
+  border-top-left-radius: 19px;
+}
+.comp-v3-table th:last-child {
+  border-top-right-radius: 19px;
+}
+.comp-v3-table tr:last-child td:first-child {
+  border-bottom-left-radius: 19px;
+}
+.comp-v3-table tr:last-child td:last-child {
+  border-bottom-right-radius: 19px;
+}
+
+.comp-v3-table th {
+  font-size: 16px;
+  font-weight: 900;
+  color: #000;
+  background: #fff;
+}
+
+/* Headers with Images */
+.th-ours {
+  background-color: var(--mint-header) !important;
+  border-left: 1px solid var(--pink-border);
+  border-right: 1px solid var(--pink-border);
+  padding-top: 45px !important;
+}
+
+.comp-v3-badge {
+  position: absolute;
+  top: -80px; /* Further extended for desktop */
+  bottom: 100%;
+  left: -1.5px;
+  right: -1.5px;
+  background: var(--green-badge, #25a85b);
+  color: var(--badge-text-color, #fff);
+  font-size: 12px;
+  font-weight: 800;
+  height: 110px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  z-index: 5;
+  border: 1px solid var(--pink-border);
+  border-bottom: 1px solid var(--pink-border);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Popping Images */
+.comp-v3-img-pop {
+  position: absolute;
+  bottom: 100%; /* Back to the table edge */
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg) scale(1);
+  width: 90%;
+  height: auto;
+  aspect-ratio: 500 / 570;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+  transition:
+    transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.6s ease;
+  z-index: 10;
+  opacity: 1;
+}
+
+/* Animation States */
+.is-past .comp-v3-img-pop {
+  transform: translateX(-150%) rotate(-45deg) scale(0.5);
+  opacity: 0;
+}
+
+.is-future .comp-v3-img-pop {
+  transform: translateX(50%) rotate(45deg) scale(0.5);
+  opacity: 0;
+}
+
+.is-active .comp-v3-img-pop {
+  transform: translateX(-50%) rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+.comp-v3-img-ours {
+  z-index: 15;
+  max-height: 300px; /* Even larger */
+}
+.comp-v3-img-comp {
+  z-index: 14;
+  max-height: 180px;
+  opacity: 0.95;
+}
+
+/* Row Styling */
+.td-label {
+  font-weight: 700;
+  color: #333;
+  font-size: 15px;
+}
+
+.td-ours {
+  background-color: var(--mint-bg);
+  border-left: 1px solid var(--pink-border);
+  border-right: 1px solid var(--pink-border);
+}
+
+.comp-v3-table tr:last-child td {
+  border-bottom: none;
+}
+.comp-v3-table tr:last-child .td-ours {
+  padding-bottom: 30px;
+}
+
+/* Icons */
+.comp-v3-seal,
+.comp-v3-x {
+  display: inline-block;
+  transform: scale(0);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.is-active tr:nth-child(1) .comp-v3-seal,
+.is-active tr:nth-child(1) .comp-v3-x {
+  transition-delay: 0.3s;
+  transform: scale(1);
+}
+.is-active tr:nth-child(2) .comp-v3-seal,
+.is-active tr:nth-child(2) .comp-v3-x {
+  transition-delay: 0.4s;
+  transform: scale(1);
+}
+.is-active tr:nth-child(3) .comp-v3-seal,
+.is-active tr:nth-child(3) .comp-v3-x {
+  transition-delay: 0.5s;
+  transform: scale(1);
+}
+.is-active tr:nth-child(4) .comp-v3-seal,
+.is-active tr:nth-child(4) .comp-v3-x {
+  transition-delay: 0.6s;
+  transform: scale(1);
+}
+.is-active tr:nth-child(5) .comp-v3-seal,
+.is-active tr:nth-child(5) .comp-v3-x {
+  transition-delay: 0.7s;
+  transform: scale(1);
+}
+
+.comp-v3-seal {
+  width: 34px;
+  height: 34px;
+  color: #f42b23 !important;
+  fill: currentColor !important;
+}
+.comp-v3-x {
+  font-size: 24px;
+  color: var(--pink-border);
+  font-weight: 300;
+}
+
+/* Indicators */
+.comp-v3-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+.comp-v3-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #eee;
+  cursor: pointer;
+}
+.comp-v3-dot.active {
+  background: #e05060;
+  width: 24px;
+  border-radius: 5px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .comp-v3-container {
+    padding: 0 15px;
+  }
+  .comp-v3-header h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+  .comp-v3-slide {
+    padding-top: 240px; /* Space for even larger mobile images */
+  }
+  .comp-v3-wave {
+    height: 200px;
+    width: calc(100% - 40px);
+  }
+  .comp-v3-img-pop {
+    width: 95%; /* Slightly larger relative size on mobile */
+  }
+  .comp-v3-img-ours {
+    max-height: 280px; /* Even larger on mobile */
+  }
+  .comp-v3-img-comp {
+    max-height: 160px;
+  }
+  .comp-v3-nav-btn {
+    width: 36px;
+    height: 36px;
+    top: 60%;
+  }
+  .comp-v3-nav-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+  .comp-v3-prev {
+    left: -5px;
+  }
+  .comp-v3-next {
+    right: -5px;
+  }
+
+  .comp-v3-table th,
+  .comp-v3-table td {
+    padding: 12px 6px;
+    font-size: 13px;
+    height: auto;
+    min-height: 60px;
+  }
+  .th-ours {
+    padding-top: 40px !important;
+  }
+  .comp-v3-badge {
+    font-size: 10px;
+    height: 85px; /* More extended background on mobile */
+    top: -55px;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 5px;
+    border-radius: 12px 12px 0 0;
+  }
+  .comp-v3-seal {
+    width: 28px;
+    height: 28px;
+  }
+  .comp-v3-x {
+    font-size: 20px;
+  }
+}

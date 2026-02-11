@@ -1,0 +1,317 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .custom-hover-section-{{ section.id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ section.settings.gap }}px;
+    padding: 20px;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .custom-hover-section-{{ section.id }} .hover-card {
+    position: relative;
+    width: {{ section.settings.card_width }}px;
+    overflow: hidden;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+    cursor: default;
+    margin-bottom: 20px;
+  }
+
+  .custom-hover-section-{{ section.id }} .hover-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 20px;
+  }
+
+  .custom-hover-section-{{ section.id }} .card-title {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    color: #000;
+    border-radius: 30px;
+    margin: 0 auto;
+    width: 80%;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+
+  .custom-hover-section-{{ section.id }} .hover-text {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background-color: {{ section.settings.hover_bg_color }};
+    color: {{ section.settings.hover_text_color }};
+    padding: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: bottom 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    z-index: 1;
+  }
+
+  .custom-hover-section-{{ section.id }} .hover-card:hover .hover-text {
+    bottom: 0;
+  }
+
+  .custom-hover-section-{{ section.id }} .hover-text.active {
+    bottom: 0 !important;
+  }
+
+  /* Ocultar botón blanco al hacer hover en desktop */
+  @media (hover: hover) and (min-width: 577px) {
+    .custom-hover-section-{{ section.id }} .hover-card:hover .card-title {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  /* Desactivar hover en mobile/touch y mantener botón visible */
+  @media (max-width: 576px), (hover: none) {
+    .custom-hover-section-{{ section.id }} .hover-card:hover .hover-text {
+      bottom: -100%;
+    }
+
+    .custom-hover-section-{{ section.id }} {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .custom-hover-section-{{ section.id }} .hover-card {
+      width: 100%;
+      max-width: 320px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign feature_cards = product.metafields.product.feature_cards.value
+  assign has_metaobjects = false
+  if feature_cards != blank and feature_cards.size > 0
+    assign has_metaobjects = true
+  endif
+-%}
+
+<div class="section-{{ section.id }}-padding">
+  <div class="custom-hover-section-{{ section.id }}">
+    {%- if has_metaobjects -%}
+      {%- comment -%} Mostrar cards desde metaobjetos del producto {%- endcomment -%}
+      {%- for card in feature_cards -%}
+        <div class="hover-card">
+          {%- if card.image != blank -%}
+            {{ card.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: card.title }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+
+          <div class="card-title">{{ card.title }}</div>
+
+          <div class="hover-text">
+            {{ card.description | newline_to_br }}
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      {%- comment -%} Fallback: Mostrar cards desde bloques estáticos {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        <div class="hover-card" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.title }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+
+          <div class="card-title">{{ block.settings.title }}</div>
+
+          <div class="hover-text">
+            {{ block.settings.text | strip_html }}
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    const section = document.querySelector('.custom-hover-section-{{ section.id }}');
+    if (!section) return;
+
+    section.querySelectorAll('.card-title').forEach((button) => {
+      button.addEventListener('click', function () {
+        const card = this.closest('.hover-card');
+        const textBox = card.querySelector('.hover-text');
+
+        textBox.classList.toggle('active');
+
+        section.querySelectorAll('.hover-text').forEach((el) => {
+          if (el !== textBox) {
+            el.classList.remove('active');
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Hover Cards",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "hover_bg_color",
+      "label": "Hover Overlay Color",
+      "default": "#A183DA"
+    },
+    {
+      "type": "color",
+      "id": "hover_text_color",
+      "label": "Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 200,
+      "max": 400,
+      "step": 5,
+      "unit": "px",
+      "label": "Card Width",
+      "default": 275
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Feature Card (Fallback)",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Description of the feature that appears on hover.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Hover Cards",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "Piernas",
+            "text": "<p>Gracias a su hoja recta y tecnología flotante, elimina el vello de las piernas con rapidez, dejando la piel uniforme, suave y libre de tirones.</p>"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Axilas",
+            "text": "<p>RUNA se adapta a la forma natural de las axilas, ofreciendo un afeitado suave y preciso sin generar irritaciones ni enrojecimientos.</p>"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Rostro",
+            "text": "<p>Permite un acabado delicado en zonas faciales sensibles como el mentón o la parte superior del labio, cuidando la piel y respetando su textura.</p>"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Bikini",
+            "text": "<p>Su cabezal curvo brinda máxima seguridad en la línea del bikini, recortando con precisión sin riesgo de cortes ni molestias.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

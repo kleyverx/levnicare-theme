@@ -1,3 +1,23 @@
+{%- comment -%}
+  Video Block Section
+  Auto-hides if on product page and no video metafield exists
+{%- endcomment -%}
+
+{%- liquid
+  assign show_section = true
+  
+  if product != blank
+    assign video_meta = product.metafields.custom.video_url
+    
+    if video_meta == blank
+      if section.settings.video_url == blank and section.settings.url_mp4 == blank
+        assign show_section = false
+      endif
+    endif
+  endif
+-%}
+
+{%- if show_section -%}
 {{ 'video-section.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
@@ -252,6 +272,7 @@
     }
 </style>
 
+{%- endif -%}
 {% schema %}
 {
     "name": "t:sections.video.name",
