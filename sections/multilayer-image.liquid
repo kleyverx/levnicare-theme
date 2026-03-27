@@ -22,7 +22,9 @@
         assign container = 'container-' | append: container
     endif
 
-    if section.blocks.first.settings.image != blank
+    if section.blocks.first.settings.video != blank
+        assign highest_height = '600px'
+    elsif section.blocks.first.settings.image != blank
         assign highest_height = section.blocks.first.settings.image.height | append: 'px'
     else
         assign highest_height = '720px'
@@ -69,7 +71,11 @@
                     <div class="halo-item image-item{% if forloop.first %} item-active{% endif %}">
                         <div class="image-container">
                             <div class="img-box">
-                                {%- if block.settings.image != blank -%}
+                                {%- if block.settings.video != blank -%}
+                                    <div class="image">
+                                        {{ block.settings.video | video_tag: autoplay: true, loop: block.settings.enable_video_looping, muted: true, controls: false, playsinline: true, class: 'video' }}
+                                    </div>
+                                {%- elsif block.settings.image != blank -%}
                                     {%- assign preview_img = block.settings.image -%}
                                     <a {% if block.settings.link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.link }}"{% endif %} class="image" style="padding-top: {% unless preview_img.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: preview_img.aspect_ratio | times: 120 | append: '%' }}{% else %}{{ 1 | divided_by: preview_img.aspect_ratio | times: 100 | append: '%' }}{% endunless %}" title="{{ block.settings.text | default: shop.name | escape }}">
                                     <img {% render 'lazyload',preview_img: preview_img,enable_rtl: settings.enable_layout_rtl %}{% unless preview_img.presentation.focal_point == '50.0% 50.0%' %} style="object-position: {{ preview_img.presentation.focal_point }}"{% endunless %} />
@@ -365,6 +371,17 @@
                     "type": "image_picker",
                     "id" : "image",
                     "label" : "t:sections.image-banner.blocks.image.settings.content.label__15"
+                },
+                {
+                    "type": "video",
+                    "id": "video",
+                    "label": "Video"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_video_looping",
+                    "label": "Enable video looping",
+                    "default": true
                 },
                 {
                     "type" : "text",

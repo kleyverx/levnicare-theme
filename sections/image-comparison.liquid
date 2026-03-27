@@ -5,10 +5,24 @@
 
 {%- liquid
   assign show_section = true
-  assign meta_results = section.settings.meta_results.value | default: product.metafields.custom.resultados_comparacion.value
+  assign comparison_block = section.blocks | where: 'type', 'comparison' | first
+  assign meta_results = null
+
+  # Prioridad:
+  # 1. Bloque (con posible conexión dinámica a metafield del producto)
+  # 2. Metafield del producto (fallback automático)
+  # 3. Settings de la sección (fallback manual)
+
+  if comparison_block != blank
+    assign meta_results = comparison_block.settings.metaobject_data
+  endif
+
+  if meta_results == blank
+    assign meta_results = product.metafields.custom.resultados_comparacion.value
+  endif
 
   if product != blank
-    if meta_results == blank
+    if meta_results == blank and comparison_block == blank
       if section.settings.image_1 == blank and section.settings.image_2 == blank
         assign show_section = false
       endif
@@ -36,10 +50,6 @@
     endif
     assign padding_full_width = section.settings.padding_full_width | append: 'px'
 
-    assign section_subtitle = section.settings.section_subtitle
-    if meta_results != blank
-      assign section_subtitle = ''
-    endif
     assign section_subtitle_font_size = section.settings.section_subtitle_font_size | append: 'px'
     assign section_subtitle_font_size_mb = section.settings.section_subtitle_font_size_mb | append: 'px'
     assign section_subtitle_color = section.settings.section_subtitle_color
@@ -48,7 +58,28 @@
     assign section_subtitle_font_style = section.settings.section_subtitle_font_style
     assign section_subtitle_letter_spacing = section.settings.section_subtitle_letter_spacing
 
-    assign section_title = meta_results.titulo | default: section.settings.section_title
+    assign section_bg = section.settings.section_bg
+    assign section_gradient = section.settings.section_gradient
+
+    assign block_titulo = null
+    assign block_subtitulo = null
+    assign block_descripcion = null
+    assign block_imagen_antes = null
+    assign block_imagen_despues = null
+    assign block_etiqueta_antes = null
+    assign block_etiqueta_despues = null
+
+    if comparison_block != blank
+      assign block_titulo = comparison_block.settings.titulo
+      assign block_subtitulo = comparison_block.settings.subtitulo
+      assign block_descripcion = comparison_block.settings.descripcion
+      assign block_imagen_antes = comparison_block.settings.imagen_antes
+      assign block_imagen_despues = comparison_block.settings.imagen_despues
+      assign block_etiqueta_antes = comparison_block.settings.etiqueta_antes
+      assign block_etiqueta_despues = comparison_block.settings.etiqueta_despues
+    endif
+
+    assign section_title = block_titulo | default: meta_results.titulo
     assign section_title_font_size = section.settings.section_title_font_size | append: 'px'
     assign section_title_font_size_mb = section.settings.section_title_font_size_mb | append: 'px'
     assign section_title_color = section.settings.section_title_color
@@ -58,18 +89,13 @@
     assign section_title_max_width = section.settings.section_title_max_width | append: 'px'
     assign section_title_letter_spacing = section.settings.section_title_letter_spacing
 
-    assign image_1 = meta_results.imagen_despues | default: section.settings.image_1
-    assign image_2 = meta_results.imagen_antes | default: section.settings.image_2
+    assign image_before = block_imagen_antes | default: meta_results.imagen_antes | default: section.settings.image_1
+    assign image_after = block_imagen_despues | default: meta_results.imagen_despues | default: section.settings.image_2
 
-    assign label_1 = meta_results.etiqueta_despues
-    assign label_2 = meta_results.etiqueta_antes
+    assign label_before = block_etiqueta_antes | default: meta_results.etiqueta_antes
+    assign label_after = block_etiqueta_despues | default: meta_results.etiqueta_despues
 
-    if meta_results == blank
-      assign label_1 = 'Después'
-      assign label_2 = 'Antes'
-    endif
-
-    assign section_description = meta_results.subtitulo | default: section.settings.section_description
+    assign section_description = block_descripcion | default: meta_results.subtitulo
     assign section_description_font_size = section.settings.section_description_font_size | append: 'px'
     assign section_description_font_size_mb = section.settings.section_description_font_size_mb | append: 'px'
     assign section_description_font_weight = section.settings.section_description_font_weight
@@ -77,44 +103,15 @@
     assign section_description_margin_top = section.settings.section_description_margin_top | append: 'px'
     assign section_description_max_width = section.settings.section_description_max_width | append: 'px'
     assign section_description_letter_spacing = section.settings.section_description_letter_spacing
-    assign text_align = section.settings.text_align
 
-    assign section_bg = section.settings.section_bg
-    assign section_gradient = section.settings.section_gradient
+    assign image_before_mobile = section.settings.image_1_mobile
+    assign image_after_mobile = section.settings.image_2_mobile
 
-    assign button_type = section.settings.button_type
-    assign button_text = section.settings.button_text
-    assign button_font_size = section.settings.button_font_size | append: 'px'
-    assign button_width = section.settings.button_width | append: 'px'
-    assign button_text_color = section.settings.button_text_color
-    assign button_border_color = section.settings.button_border_color
-    assign button_background_color = section.settings.button_background_color
-    assign button_gradient_color = section.settings.button_gradient_color
-    assign button_text_color_hover = section.settings.button_text_color_hover
-    assign button_border_color_hover = section.settings.button_border_color_hover
-    assign button_background_color_hover = section.settings.button_background_color_hover
-    assign button_gradient_color_hover = section.settings.button_gradient_color_hover
-    assign button_text_transform = section.settings.button_text_transform
-    assign button_font_weight = section.settings.button_font_weight
-    assign button_link = section.settings.button_link
-    assign button_margin_top = section.settings.button_margin_top | append: 'px'
-    assign button_text_letter_spacing = section.settings.button_text_letter_spacing
-
-    assign enable_button_custom_border = section.settings.enable_button_custom_border
-    assign custom_border_color = section.settings.custom_border_color
-
-    assign image_1_mobile = section.settings.image_1_mobile
-    assign image_2_mobile = section.settings.image_2_mobile
-
-    if image_1_mobile != blank and image_2_mobile != blank
+    if image_before_mobile != blank and image_after_mobile != blank
       assign show_image_mobile = true
     endif
 
-    assign content_position = section.settings.content_position
-    assign content_side_style = section.settings.content_side_style
-    assign content_style_2_background_color = section.settings.content_style_2_background_color
-    assign content_style_2_background_gradient = section.settings.content_style_2_background_gradient
-    assign content_style_2_border_color = section.settings.content_style_2_border_color
+    assign section_subtitle = block_subtitulo
   -%}
 
   <style>
@@ -161,6 +158,44 @@
     }
     .label-antes { left: 20px; }
     .label-despues { right: 20px; }
+
+    .content-position-top {
+        flex-direction: column;
+    }
+
+    .content-position-top .section-images {
+        width: 100% !important;
+    }
+
+    .content-position-top .images-container {
+        margin: 0 auto;
+    }
+
+    .compare-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .adaptive_height {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    /* Reduce image size on desktop */
+    @media (min-width: 1024px) {
+        .section-block-{{section.id}} .images-container {
+            {% unless section.settings.container == 'fullwidth' %}
+            max-width: 800px;
+            {% endunless %}
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
   </style>
 
   <div
@@ -169,22 +204,12 @@
     style="--section-bg: {% if section_gradient != blank %}{{ section_gradient }}{% elsif section_bg != blank %}{{ section_bg }}{% endif %};"
   >
     <div class="{{ container }}">
-      <div class="section-content content-position-{{ content_position }} style-{{ content_side_style }}">
-        <div class="section-text">
-          {% if content_side_style == '2' %}
-            {% if content_position == 'left' or content_position == 'right' %}
-              <fade-in-component
-                class="style-wrapper"
-                style="
-                  --background: {% if content_style_2_background_gradient != blank %}{{ content_style_2_background_gradient }}{% elsif content_style_2_background_color != blank %}{{ content_style_2_background_color }}{% endif %};
-                  --border-color: {% if  content_style_2_border_color != blank %}{{ content_style_2_border_color }}{% endif %};
-                "
-              >
-            {% endif %}
-          {% endif %}
+      <!-- Title and Description centered above image -->
+      {% if section_subtitle != blank or section_title != blank or section_description != blank %}
+        <div class="section-text-centered" style="text-align: center; margin-bottom: 2rem;">
           {% if section_subtitle != blank %}
             <h4
-              class="subtitle text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
+              class="subtitle{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
               style="
                 {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 0;{% endif %}
                 --subtitle-font-size: {{ section_subtitle_font_size }};
@@ -201,7 +226,7 @@
           {% endif %}
           {% if section_title != blank %}
             <h3
-              class="title text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
+              class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
               style="
                 {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 1;{% endif %}
                 --title-font-size: {{ section_title_font_size }};
@@ -212,6 +237,8 @@
                 --title-font-style: {{ section_title_font_style }};
                 --title-max-width: {{ section_title_max_width }};
                 --title-letter-spacing: {{ section_title_letter_spacing }};
+                margin-left: auto;
+                margin-right: auto;
               "
             >
               <span class="text">
@@ -221,7 +248,7 @@
           {% endif %}
           {% if section_description != blank %}
             <div
-              class="description text-{{ text_align }}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
+              class="description{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
               style="
                 {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 2;{% endif %}
                 --description-font-size: {{ section_description_font_size }};
@@ -231,72 +258,41 @@
                 --description-margin-top: {{ section_description_margin_top }};
                 --description-max-width: {{ section_description_max_width }};
                 --description-letter-spacing: {{ section_description_letter_spacing }};
+                margin-left: auto;
+                margin-right: auto;
               "
             >
               {{ section_description }}
             </div>
           {% endif %}
-          {% if button_text != blank %}
-            {% if settings.banner_animation == 'effect_fade_up' %}
-              <div class="scroll-trigger animate--slide-in" style="--animation-order: 3;">
-            {% endif %}
-            <a
-              {% if button_link != blank %}
-                href="{{ button_link }}"
-              {% else %}
-                role="link"
-              {% endif %}
-              class="shop-all text-{{ text_align }} {% if button_type == 'button' %}button{% else %}link{% endif %} {% if enable_button_custom_border %}custom-border{% endif %}"
-              style="
-                --button-font-size: {{ button_font_size }};
-                --button-text-color: {% if button_text_color != blank %}{{ button_text_color }}{% endif %};
-                --button-border-color: {% if button_border_color != blank %}{{ button_border_color }}{% endif %};
-                --button-text-color-hover: {% if button_text_color_hover != blank %}{{ button_text_color_hover }}{% endif %};
-                --button-border-color-hover: {% if button_border_color_hover != blank %}{{ button_border_color_hover }}{% endif %};
-                --button-text-transform: {{ button_text_transform }};
-                --button-font-weight: {{ button_font_weight }};
-                --button-margin-top: {{ button_margin_top }};
-                --button-text-letter-spacing: {{ button_text_letter_spacing }};
-                {% if button_type == 'button' %}
-                    --button-width: {{ button_width }};
-                    --button-background: {% if button_gradient_color != blank %}{{ button_gradient_color }}{% elsif button_background_color != blank %}{{ button_background_color }}{% endif %};
-                    --button-background-hover: {% if button_gradient_color_hover != blank %}{{ button_gradient_color_hover }}{% elsif button_background_color_hover != blank %}{{ button_background_color_hover }}{% endif %};
-                {% endif %}
-                --custom-border-color: {{ custom_border_color }};
-              "
-            >
-              <span class="text">{{ button_text }}</span>
-            </a>
-            {% if settings.banner_animation == 'effect_fade_up' %}
-              </div>
-            {% endif %}
-          {% endif %}
-          {% if content_side_style == '2' %}
-            {% if content_position == 'left' or content_position == 'right' %}
-              </fade-in-component>
-            {% endif %}
-          {% endif %}
         </div>
+      {% endif %}
+
+      <!-- Comparison Image -->
+      <div class="section-content content-position-{{ section.settings.content_position }}">
         <image-comparison-component class="section-images">
           <div
             class="images-container{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
             data-images-container
-            style="--left-pos: 95%"
+            style="--left-pos: 50%"
           >
-            {% if image_2 != blank %}
+            <!-- After Image (Base) -->
+            {% if image_after != blank %}
               <div
                 class="adaptive_height compare-image{% unless show_image_mobile %} not-image-mobile{% endunless %}"
                 data-image-overlay
-                style="padding-top: {% unless image_2.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_2.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_2.aspect_ratio | times: 100 }}%{% endunless %}"
+                style="padding-top: {{ 1 | divided_by: image_after.aspect_ratio | times: 100 }}%"
               >
                 <img
-                  {% render 'lazyload', preview_img: image_2 -%}
-                  {% unless image_2.presentation.focal_point == '50.0% 50.0%' %}
-                    style="object-position: {{ image_2.presentation.focal_point }}"
+                  width="{{ image_after.width }}"
+                  height="{{ image_after.height }}"
+                  {% render 'lazyload', preview_img: image_after -%}
+                  {% unless image_after.presentation.focal_point == '50.0% 50.0%' %}
+                    style="object-position: {{ image_after.presentation.focal_point }}"
                   {% endunless %}
                 >
-                {% if label_2 != blank %}
-                  <span class="comparison-label label-antes">{{ label_2 }}</span>
+                {% if label_after != blank %}
+                  <span class="comparison-label label-despues">{{ label_after }}</span>
                 {% endif %}
                 {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
               </div>
@@ -306,35 +302,11 @@
                 style="--height_placeholder: 750px;"
                 data-image-overlay
               >
-                {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
               </div>
             {% endif %}
-            {% if show_image_mobile %}
-              <div
-                class="adaptive_height compare-image mobile"
-                data-image-overlay
-                style="padding-top: {% unless image_2_mobile.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_2_mobile.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_2_mobile.aspect_ratio | times: 100 }}%{% endunless %}"
-              >
-                <img
-                  {% render 'lazyload', preview_img: image_2_mobile -%}
-                  {% unless image_2_mobile.presentation.focal_point == '50.0% 50.0%' %}
-                    style="object-position: {{ image_2_mobile.presentation.focal_point }}"
-                  {% endunless %}
-                >
-                {% if label_2 != blank %}
-                  <span class="comparison-label label-antes">{{ label_2 }}</span>
-                {% endif %}
-                {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
-              </div>
-            {% elsif image_2 == blank %}
-              <div
-                class="adaptive_height placeholder compare-image mobile"
-                style="--height_placeholder: 750px;"
-                data-image-overlay
-              >
-                {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
-              </div>
-            {% endif %}
+
+            <!-- Slider Handle -->
             <div class="image-comparison-slider" data-image-slider>
               <span class="slider-divider"></span>
               <div class="slider-thumb">
@@ -344,19 +316,23 @@
                 </div>
               </div>
             </div>
-            {% if image_1 != blank %}
+
+            <!-- Before Image (Overlay - Left) -->
+            {% if image_before != blank %}
               <div
                 class="adaptive_height compare-image compare-image-overlay{% unless show_image_mobile %} not-image-mobile{% endunless %}"
-                style="padding-top: {% unless image_1.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_1.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_1.aspect_ratio | times: 100 }}%{% endunless %}"
+                style="padding-top: {{ 1 | divided_by: image_before.aspect_ratio | times: 100 }}%"
               >
                 <img
-                  {% render 'lazyload', preview_img: image_1 -%}
-                  {% unless image_1.presentation.focal_point == '50.0% 50.0%' %}
-                    style="object-position: {{ image_1.presentation.focal_point }}"
+                  width="{{ image_before.width }}"
+                  height="{{ image_before.height }}"
+                  {% render 'lazyload', preview_img: image_before -%}
+                  {% unless image_before.presentation.focal_point == '50.0% 50.0%' %}
+                    style="object-position: {{ image_before.presentation.focal_point }}"
                   {% endunless %}
                 >
-                {% if label_1 != blank %}
-                  <span class="comparison-label label-despues">{{ label_1 }}</span>
+                {% if label_before != blank %}
+                  <span class="comparison-label label-antes">{{ label_before }}</span>
                 {% endif %}
                 {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
               </div>
@@ -365,31 +341,40 @@
                 class="adaptive_height compare-image-overlay placeholder compare-image"
                 style="--height_placeholder: 750px;"
               >
-                {{ 'product-apparel-1' | placeholder_svg_tag: ' placeholder-svg' }}
+                {{ 'product-apparel-2' | placeholder_svg_tag: ' placeholder-svg' }}
               </div>
             {% endif %}
+
+            <!-- Mobile Support -->
             {% if show_image_mobile %}
+              <!-- After Mobile (Base) -->
               <div
-                class="adaptive_height compare-image compare-image-overlay mobile"
-                style="padding-top: {% unless image_1_mobile.presentation.focal_point == '50.0% 50.0%' %}{{ 1 | divided_by: image_1_mobile.aspect_ratio | times: 120 }}%{% else %}{{ 1 | divided_by: image_1_mobile.aspect_ratio | times: 100 }}%{% endunless %}"
+                class="adaptive_height compare-image mobile"
+                data-image-overlay
+                style="padding-top: {{ 1 | divided_by: image_after_mobile.aspect_ratio | times: 100 }}%"
               >
                 <img
-                  {% render 'lazyload', preview_img: image_1_mobile -%}
-                  {% unless image_1_mobile.presentation.focal_point == '50.0% 50.0%' %}
-                    style="object-position: {{ image_1_mobile.presentation.focal_point }}"
-                  {% endunless %}
+                  width="{{ image_after_mobile.width }}"
+                  height="{{ image_after_mobile.height }}"
+                  {% render 'lazyload', preview_img: image_after_mobile -%}
                 >
-                {% if label_1 != blank %}
-                  <span class="comparison-label label-despues">{{ label_1 }}</span>
+                {% if label_after != blank %}
+                  <span class="comparison-label label-despues">{{ label_after }}</span>
                 {% endif %}
-                {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif %}
               </div>
-            {% elsif image_1 == blank %}
+              <!-- Before Mobile (Overlay) -->
               <div
-                class="adaptive_height compare-image-overlay placeholder compare-image mobile"
-                style="--height_placeholder: 750px;"
+                class="adaptive_height compare-image compare-image-overlay mobile"
+                style="padding-top: {{ 1 | divided_by: image_before_mobile.aspect_ratio | times: 100 }}%"
               >
-                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                <img
+                  width="{{ image_before_mobile.width }}"
+                  height="{{ image_before_mobile.height }}"
+                  {% render 'lazyload', preview_img: image_before_mobile -%}
+                >
+                {% if label_before != blank %}
+                  <span class="comparison-label label-antes">{{ label_before }}</span>
+                {% endif %}
               </div>
             {% endif %}
           </div>
@@ -495,12 +480,6 @@
   "class": "section-image-comparison",
   "settings": [
     {
-      "type": "metaobject",
-      "id": "meta_results",
-      "label": "Metaobjeto de Comparación",
-      "metaobject_type": "comparacion_resultados"
-    },
-    {
       "type": "header",
       "content": "t:settings_schema.general.name"
     },
@@ -578,11 +557,7 @@
       "type": "paragraph",
       "content": "t:sections.image-banner.blocks.image.settings.content.label__14"
     },
-    {
-      "type": "text",
-      "id": "section_subtitle",
-      "label": "t:sections.image-banner.blocks.image.settings.content.label__14"
-    },
+
     {
       "type": "range",
       "id": "section_subtitle_font_size",
@@ -681,12 +656,7 @@
       "type": "paragraph",
       "content": "t:sections.general.settings.content.label__1"
     },
-    {
-      "type": "text",
-      "id": "section_title",
-      "label": "t:settings_schema.newsletter_popup.settings.general.label__6",
-      "default": "Iconic Divine Eyeshadow Palettes"
-    },
+
     {
       "type": "range",
       "id": "section_title_font_size",
@@ -795,12 +765,7 @@
       "type": "paragraph",
       "content": "t:sections.image-banner.blocks.image.settings.content.label__2"
     },
-    {
-      "type": "richtext",
-      "id": "section_description",
-      "label": "t:sections.image-banner.blocks.image.settings.content.label__2",
-      "default": "<p>New Shades. Improved Formula.Full color Pay-Off.</p>"
-    },
+
     {
       "type": "range",
       "id": "section_description_font_size",
@@ -1229,9 +1194,71 @@
       "default": 50
     }
   ],
+  "blocks": [
+    {
+      "type": "comparison",
+      "name": "Comparación Antes/Después",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "metaobject",
+          "id": "metaobject_data",
+          "label": "Metaobjeto (Conexión Dinámica)",
+          "metaobject_type": "resultados_comparacion"
+        },
+        {
+          "type": "header",
+          "content": "O configura manualmente:"
+        },
+        {
+          "type": "text",
+          "id": "titulo",
+          "label": "Título"
+        },
+        {
+          "type": "textarea",
+          "id": "subtitulo",
+          "label": "Subtítulo"
+        },
+        {
+          "type": "richtext",
+          "id": "descripcion",
+          "label": "Descripción"
+        },
+        {
+          "type": "image_picker",
+          "id": "imagen_antes",
+          "label": "Imagen Antes"
+        },
+        {
+          "type": "text",
+          "id": "etiqueta_antes",
+          "label": "Etiqueta Antes",
+          "default": "Antes"
+        },
+        {
+          "type": "image_picker",
+          "id": "imagen_despues",
+          "label": "Imagen Después"
+        },
+        {
+          "type": "text",
+          "id": "etiqueta_despues",
+          "label": "Etiqueta Después",
+          "default": "Después"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 1,
   "presets": [
     {
-      "name": "t:sections.image_comparison.name"
+      "name": "t:sections.image_comparison.name",
+      "blocks": [
+        {
+          "type": "comparison"
+        }
+      ]
     }
   ],
   "disabled_on": {

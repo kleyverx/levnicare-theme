@@ -10,6 +10,7 @@
       --bg-color: {{ section.settings.bg_color }};
       --title-size: {{ section.settings.title_size_mb }}px;
       --text-size: {{ section.settings.text_size_mb }}px;
+      --icon-size: {{ section.settings.icon_size }}px;
   }
 
   @media screen and (min-width: 750px) {
@@ -22,63 +23,244 @@
   }
 {%- endstyle -%}
 
-<div class="product-features-highlight section-{{ section.id }}-padding">
-  <div class="container">
-    <div class="feature-grid">
-      {%- comment -%} Determine split index for blocks {%- endcomment -%}
-      {%- assign block_count = section.blocks.size -%}
-      {%- assign half_count = block_count | divided_by: 2.0 | ceil -%}
+{%- assign features = product.metafields.custom.product_features.value -%}
+{%- assign features_image = product.metafields.custom.features_image.value -%}
+{%- assign show_section = false -%}
+{%- if features != blank or section.blocks.size > 0 -%}
+  {%- assign show_section = true -%}
+{%- elsif request.design_mode -%}
+  {%- assign show_section = true -%}
+{%- endif -%}
 
-      <div class="feature-items feature-col-left">
-        {%- for block in section.blocks limit: half_count -%}
-          <div class="feature-item" {{ block.shopify_attributes }}>
-            <div class="feature-item__icon">
-              {%- if block.settings.icon_svg != blank -%}
-                {{ block.settings.icon_svg }}
-              {%- endif -%}
-            </div>
-            <div class="feature-item__content">
-              <h3 class="feature-item__title">{{ block.settings.title }}</h3>
-              <div class="feature-item__text">{{ block.settings.text }}</div>
-            </div>
-          </div>
-        {%- endfor -%}
-      </div>
-
-      <div class="feature-image">
-        {%- if section.settings.image != blank -%}
-          {%- assign widths = '165, 360, 535, 750, 1070, 1500' -%}
-          {{
-            section.settings.image
-            | image_url: width: 1500
-            | image_tag:
-              loading: 'lazy',
-              sizes: '(min-width: 1100px) 535px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)',
-              widths: widths
-          }}
+{%- if show_section -%}
+  <div class="product-features-highlight section-{{ section.id }}-padding">
+    <div class="container">
+      <div class="feature-grid">
+        {%- comment -%} Determine split index for blocks/features {%- endcomment -%}
+        {%- assign item_count = 0 -%}
+        {%- if features != blank -%}
+          {%- assign item_count = features.size -%}
         {%- else -%}
-          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- assign item_count = section.blocks.size -%}
         {%- endif -%}
-      </div>
+        {%- assign half_count = item_count | divided_by: 2.0 | ceil -%}
 
-      <div class="feature-items feature-col-right">
-        {%- for block in section.blocks offset: half_count -%}
-          <div class="feature-item" {{ block.shopify_attributes }}>
-            <div class="feature-item__icon">
-              {%- if block.settings.icon_svg != blank -%}
-                {{ block.settings.icon_svg }}
-              {%- endif -%}
-            </div>
-            <div class="feature-item__content">
-              <h3 class="feature-item__title">{{ block.settings.title }}</h3>
-              <div class="feature-item__text">{{ block.settings.text }}</div>
-            </div>
-          </div>
-        {%- endfor -%}
+        <div class="feature-items feature-col-left">
+          {%- if features != blank -%}
+            {%- for feature in features limit: half_count -%}
+              <div class="feature-item">
+                <div class="feature-item__icon">
+                  {%- assign icon_img = feature.icon_image.value | default: feature.image.value -%}
+                  {%- if icon_img != blank -%}
+                    {{ icon_img | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                  {%- else -%}
+                    {%- assign icon_val = feature.text.value
+                      | default: feature.text
+                      | default: feature.icon_svg.value
+                      | default: feature.icon_svg
+                      | default: feature.icon.value
+                      | default: feature.icon
+                    -%}
+                    {{ icon_val }}
+                  {%- endif -%}
+                </div>
+                <div class="feature-item__content">
+                  <h3 class="feature-item__title">
+                    {{
+                      feature.title.value
+                      | default: feature.title
+                      | default: feature.nombre.value
+                      | default: feature.nombre
+                    }}
+                  </h3>
+                  {%- assign desc_obj = feature.description | default: feature.text | default: feature.texto -%}
+                  <div class="feature-item__text">
+                    {%- if desc_obj.value != blank -%}
+                      {{ desc_obj | metafield_tag }}
+                    {%- else -%}
+                      {{ desc_obj }}
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for block in section.blocks limit: half_count -%}
+              <div class="feature-item" {{ block.shopify_attributes }}>
+                {%- assign feature = block.settings.feature -%}
+                {%- if feature != blank -%}
+                  <div class="feature-item__icon">
+                    {%- assign icon_img = feature.icon_image.value | default: feature.image.value -%}
+                    {%- if icon_img != blank -%}
+                      {{ icon_img | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                    {%- else -%}
+                      {%- assign icon_val = feature.text.value
+                        | default: feature.text
+                        | default: feature.icon_svg.value
+                        | default: feature.icon_svg
+                        | default: feature.icon.value
+                        | default: feature.icon
+                      -%}
+                      {{ icon_val }}
+                    {%- endif -%}
+                  </div>
+                  <div class="feature-item__content">
+                    <h3 class="feature-item__title">
+                      {{
+                        feature.title.value
+                        | default: feature.title
+                        | default: feature.nombre.value
+                        | default: feature.nombre
+                        | default: 'Feature Title'
+                      }}
+                    </h3>
+                    {%- assign desc_obj = feature.description | default: feature.text | default: feature.texto -%}
+                    <div class="feature-item__text">
+                      {%- if desc_obj.value != blank -%}
+                        {{ desc_obj | metafield_tag }}
+                      {%- else -%}
+                        {{ desc_obj }}
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- else -%}
+                  <div class="feature-item__icon">
+                    {%- if block.settings.icon_image != blank -%}
+                      {{ block.settings.icon_image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                    {%- elsif block.settings.icon_svg != blank -%}
+                      {{ block.settings.icon_svg }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {%- endif -%}
+                  </div>
+                  <div class="feature-item__content">
+                    <h3 class="feature-item__title">{{ block.settings.title }}</h3>
+                    <div class="feature-item__text">{{ block.settings.text }}</div>
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        <div class="feature-image">
+          {%- assign main_image = features_image | default: section.settings.image -%}
+          {%- if main_image != blank -%}
+            {%- assign widths = '165, 360, 535, 750, 1070, 1500' -%}
+            {{
+              main_image
+              | image_url: width: 1500
+              | image_tag:
+                loading: 'lazy',
+                sizes: '(min-width: 1100px) 535px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)',
+                widths: widths
+            }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+
+        <div class="feature-items feature-col-right">
+          {%- if features != blank -%}
+            {%- for feature in features offset: half_count -%}
+              <div class="feature-item">
+                <div class="feature-item__icon">
+                  {%- assign icon_img = feature.icon_image.value | default: feature.image.value -%}
+                  {%- if icon_img != blank -%}
+                    {{ icon_img | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                  {%- else -%}
+                    {%- assign icon_val = feature.text.value
+                      | default: feature.text
+                      | default: feature.icon_svg.value
+                      | default: feature.icon_svg
+                      | default: feature.icon.value
+                      | default: feature.icon
+                    -%}
+                    {{ icon_val }}
+                  {%- endif -%}
+                </div>
+                <div class="feature-item__content">
+                  <h3 class="feature-item__title">
+                    {{
+                      feature.title.value
+                      | default: feature.title
+                      | default: feature.nombre.value
+                      | default: feature.nombre
+                    }}
+                  </h3>
+                  {%- assign desc_obj = feature.description | default: feature.text | default: feature.texto -%}
+                  <div class="feature-item__text">
+                    {%- if desc_obj.value != blank -%}
+                      {{ desc_obj | metafield_tag }}
+                    {%- else -%}
+                      {{ desc_obj }}
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for block in section.blocks offset: half_count -%}
+              <div class="feature-item" {{ block.shopify_attributes }}>
+                {%- assign feature = block.settings.feature -%}
+                {%- if feature != blank -%}
+                  <div class="feature-item__icon">
+                    {%- assign icon_img = feature.icon_image.value | default: feature.image.value -%}
+                    {%- if icon_img != blank -%}
+                      {{ icon_img | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                    {%- else -%}
+                      {%- assign icon_val = feature.text.value
+                        | default: feature.text
+                        | default: feature.icon_svg.value
+                        | default: feature.icon_svg
+                        | default: feature.icon.value
+                        | default: feature.icon
+                      -%}
+                      {{ icon_val }}
+                    {%- endif -%}
+                  </div>
+                  <div class="feature-item__content">
+                    <h3 class="feature-item__title">
+                      {{
+                        feature.title.value
+                        | default: feature.title
+                        | default: feature.nombre.value
+                        | default: feature.nombre
+                        | default: 'Feature Title'
+                      }}
+                    </h3>
+                    {%- assign desc_obj = feature.description | default: feature.text | default: feature.texto -%}
+                    <div class="feature-item__text">
+                      {%- if desc_obj.value != blank -%}
+                        {{ desc_obj | metafield_tag }}
+                      {%- else -%}
+                        {{ desc_obj }}
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- else -%}
+                  <div class="feature-item__icon">
+                    {%- if block.settings.icon_image != blank -%}
+                      {{ block.settings.icon_image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                    {%- elsif block.settings.icon_svg != blank -%}
+                      {{ block.settings.icon_svg }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {%- endif -%}
+                  </div>
+                  <div class="feature-item__content">
+                    <h3 class="feature-item__title">{{ block.settings.title }}</h3>
+                    <div class="feature-item__text">{{ block.settings.text }}</div>
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
       </div>
     </div>
   </div>
-</div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -114,6 +296,16 @@
       "id": "color_icon",
       "label": "Icon Color",
       "default": "#7F48B0"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 50
     },
     {
       "type": "range",
@@ -173,21 +365,34 @@
       "limit": 6,
       "settings": [
         {
+          "type": "metaobject",
+          "id": "feature",
+          "label": "Feature Entry (Automatic)",
+          "metaobject_type": "product_feature",
+          "info": "Picking an entry here will automatically populate Icon, Title, and Text."
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "Upload a PNG or SVG file."
+        },
+        {
           "type": "textarea",
           "id": "icon_svg",
-          "label": "SVG Icon Code",
-          "info": "Paste the SVG code here. Ensure it has no width/height or uses '1em'."
+          "label": "Manual SVG Icon Code",
+          "info": "Used only if no image is selected above."
         },
         {
           "type": "text",
           "id": "title",
-          "label": "Title",
+          "label": "Manual Title",
           "default": "Feature Title"
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "Description",
+          "label": "Manual Description",
           "default": "<p>Description of the feature.</p>"
         }
       ]

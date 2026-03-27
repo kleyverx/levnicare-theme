@@ -4,20 +4,31 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign show_section = true
+  assign video_meta = product.metafields.custom.video_url
   
-  if product != blank
-    assign video_meta = product.metafields.custom.video_url
-    
-    if video_meta == blank
-      if section.settings.video_url == blank and section.settings.url_mp4 == blank
-        assign show_section = false
-      endif
+  if video_meta != blank
+    assign video_pc = video_meta
+  else
+    assign video_pc = section.settings.video_url
+  endif
+
+  assign video_mb = section.settings.video_url_mb
+  assign video_mp4_pc = section.settings.url_mp4
+  assign video_mp4_mb = section.settings.url_mp4_mb
+
+  assign has_video = false
+  if section.settings.style_video == 'youtube'
+    if video_pc != blank or video_mb != blank
+       assign has_video = true
+    endif
+  elsif section.settings.style_video == 'mp4'
+    if video_mp4_pc != blank or video_mp4_mb != blank
+       assign has_video = true
     endif
   endif
 -%}
 
-{%- if show_section -%}
+{%- if has_video or request.design_mode -%}
 {{ 'video-section.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
@@ -96,9 +107,9 @@
                 </a>
             </div>
         </noscript>
-        <deferred-media class="video-section__media deferred-media no-js-hidden{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-media-id="{{ section.settings.video_url.id }}" style="padding-bottom: {{ section.settings.video_height }}%;--video_height_mb: {{ section.settings.video_height_mb }}%;">
+        <deferred-media class="video-section__media deferred-media no-js-hidden{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" data-media-id="{{ video_pc.id }}" style="padding-bottom: {{ section.settings.video_height }}%;--video_height_mb: {{ section.settings.video_height_mb }}%;">
             <button
-                id="Deferred-Poster-Modal-{{ section.settings.video_url.id }}"
+                id="Deferred-Poster-Modal-{{ video_pc.id }}"
                 class="video-section__poster media deferred-media__poster media--landscape"
                 type="button"
                 {% if autoVideo %}style="display: none"{% endif %}
@@ -157,24 +168,28 @@
 
             <{% if autoVideo %}div{% else %}template{% endif %}>
                 {% if section.settings.style_video == 'youtube' %}
-                    {%- if section.settings.video_url.type == 'youtube' -%}
-                        <iframe src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&mute={% if videoSound %}0{% else %}1{%endif%}&autoplay=1&loop=1&playlist={{section.settings.video_url.id}}" class="js-youtube{% if section.settings.video_url_mb != blank %} slide-pc{% endif %}" allow="autoplay; loop; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
-                        {%- if section.settings.video_url_mb != blank -%}
-                            <iframe src="https://www.youtube.com/embed/{{ section.settings.video_url_mb.id }}?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&mute={% if videoSound %}0{% else %}1{%endif%}&autoplay=1&loop=1&playlist={{section.settings.video_url_mb.id}}" class="js-youtube slide-mb" allow="autoplay; loop; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
-                        {%- endif -%}
-                    {%- else -%}
-                        <iframe src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}?autoplay=1&title=0&byline=0&portrait=0&mute={% if videoSound %}0{% else %}1{%endif%}&loop=1&autopause=0&playlist={{section.settings.video_url.id}}" class="js-vimeo{% if section.settings.video_url_mb != blank %} slide-pc{% endif %}" allow="autoplay; encrypted-media" webkitallowfullscreen mozallowfullscreen allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
-                        {%- if section.settings.video_url_mb != blank -%}
-                            <iframe src="https://player.vimeo.com/video/{{ section.settings.video_url_mb.id }}?autoplay=1&title=0&byline=0&portrait=0&mute={% if videoSound %}0{% else %}1{%endif%}&loop=1&autopause=0&playlist={{section.settings.video_url_mb.id}}" class="js-vimeo slide-mb" allow="autoplay; encrypted-media" webkitallowfullscreen mozallowfullscreen allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+                    {%- if video_pc != blank -%}
+                        {%- if video_pc.type == 'youtube' -%}
+                            <iframe src="https://www.youtube.com/embed/{{ video_pc.id }}?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&mute={% if videoSound %}0{% else %}1{%endif%}&autoplay=1&loop=1&playlist={{video_pc.id}}" class="js-youtube{% if video_mb != blank %} slide-pc{% endif %}" allow="autoplay; loop; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+                            {%- if video_mb != blank -%}
+                                <iframe src="https://www.youtube.com/embed/{{ video_mb.id }}?enablejsapi=1&modestbranding=1&autohide=1&showinfo=0&controls=0&mute={% if videoSound %}0{% else %}1{%endif%}&autoplay=1&loop=1&playlist={{video_mb.id}}" class="js-youtube slide-mb" allow="autoplay; loop; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+                            {%- endif -%}
+                        {%- else -%}
+                            <iframe src="https://player.vimeo.com/video/{{ video_pc.id }}?autoplay=1&title=0&byline=0&portrait=0&mute={% if videoSound %}0{% else %}1{%endif%}&loop=1&autopause=0&playlist={{video_pc.id}}" class="js-vimeo{% if video_mb != blank %} slide-pc{% endif %}" allow="autoplay; encrypted-media" webkitallowfullscreen mozallowfullscreen allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+                            {%- if video_mb != blank -%}
+                                <iframe src="https://player.vimeo.com/video/{{ video_mb.id }}?autoplay=1&title=0&byline=0&portrait=0&mute={% if videoSound %}0{% else %}1{%endif%}&loop=1&autopause=0&playlist={{video_mb.id}}" class="js-vimeo slide-mb" allow="autoplay; encrypted-media" webkitallowfullscreen mozallowfullscreen allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+                            {%- endif -%}
                         {%- endif -%}
                     {%- endif -%}
                 {%- else -%}
-                <video class="js-video{% if section.settings.url_mp4_mb != blank %} slide-pc{% endif %}"{% unless videoSound %} muted{% endunless %} playsinline preload="none" autoplay loop controls>
-                        <source type="video/mp4" src="{{ section.settings.url_mp4 }}">
-                    </video>
-                    {%- if section.settings.url_mp4_mb != blank -%}
+                    {%- if video_mp4_pc != blank -%}
+                        <video class="js-video{% if video_mp4_mb != blank %} slide-pc{% endif %}"{% unless videoSound %} muted{% endunless %} playsinline preload="none" autoplay loop controls>
+                            <source type="video/mp4" src="{{ video_mp4_pc }}">
+                        </video>
+                    {%- endif -%}
+                    {%- if video_mp4_mb != blank -%}
                         <video class="js-video slide-mb"{% unless videoSound %} muted{% endunless %} playsinline preload="none" autoplay loop controls>
-                            <source type="video/mp4" src="{{ section.settings.url_mp4_mb }}">
+                            <source type="video/mp4" src="{{ video_mp4_mb }}">
                         </video>
                     {%- endif -%}
             {% endif %}
@@ -456,7 +471,6 @@
             "youtube",
             "vimeo"
         ],
-        "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
         "label": "t:sections.video.settings.video_url.label",
         "info": "t:sections.video.settings.video_url.info"
     },
@@ -468,8 +482,7 @@
             "vimeo"
         ],
         "label": "t:sections.video.settings.video_url.label_mb",
-        "info": "t:sections.video.settings.video_url.info",
-        "default": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc"
+        "info": "t:sections.video.settings.video_url.info"
     },
     {
         "type": "url",

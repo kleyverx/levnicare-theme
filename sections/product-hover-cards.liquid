@@ -1,8 +1,21 @@
+{%- liquid
+  assign feature_cards = product.metafields.product.feature_cards.value
+  assign has_metaobjects = false
+  if feature_cards != blank and feature_cards.size > 0
+    assign has_metaobjects = true
+  endif
+
+  # Metafield overrides for colors
+  assign hover_bg_color = product.metafields.custom.hover_card_bg_color | default: section.settings.hover_bg_color
+  assign hover_text_color = product.metafields.custom.hover_card_text_color | default: section.settings.hover_text_color
+  assign bg_color = product.metafields.custom.hover_cards_section_bg | default: section.settings.bg_color
+-%}
+
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
-    background-color: {{ section.settings.bg_color }};
+    background-color: {{ bg_color }};
   }
 
   @media screen and (min-width: 750px) {
@@ -65,8 +78,8 @@
     left: 0;
     width: 100%;
     height: 60%;
-    background-color: {{ section.settings.hover_bg_color }};
-    color: {{ section.settings.hover_text_color }};
+    background-color: {{ hover_bg_color }};
+    color: {{ hover_text_color }};
     padding: 15px;
     font-size: 14px;
     line-height: 1.4;
@@ -113,14 +126,6 @@
     }
   }
 {%- endstyle -%}
-
-{%- liquid
-  assign feature_cards = product.metafields.product.feature_cards.value
-  assign has_metaobjects = false
-  if feature_cards != blank and feature_cards.size > 0
-    assign has_metaobjects = true
-  endif
--%}
 
 <div class="section-{{ section.id }}-padding">
   <div class="custom-hover-section-{{ section.id }}">

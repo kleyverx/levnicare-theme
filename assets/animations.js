@@ -35,7 +35,11 @@ function initializeScrollAnimationTrigger(rootEl = document, isDesignModeEvent =
   const observer = new IntersectionObserver(onIntersection, {
     rootMargin: '0px 0px -50px 0px',
   });
-  animationTriggerElements.forEach((element) => observer.observe(element));
+  animationTriggerElements.forEach((element) => {
+    // Skip elements inside slick cloned slides to prevent delayed re-animation
+    if (element.closest('.slick-cloned')) return;
+    observer.observe(element);
+  });
 }
 
 // Zoom in animation logic

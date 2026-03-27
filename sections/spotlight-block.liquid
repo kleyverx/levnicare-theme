@@ -30,7 +30,7 @@
                     <div class="halo-item{% if swipe == 'slider' and section.settings.block_layout == 'grid' %} slider__slide{% endif %} spotlight--{{ block.type }}{% if section.settings.enable_plus_icon %} enable_plus_icon{% endif %}" id="block-{{block.id}}" style="--item-distance-style: {{ section.settings.item_distance | append: 'px' }};">
                         <div class="spotlight-item spotlight-item__{{block.type}}{% if block.settings.enable_absolute and block.settings.enable_image %} content_absolute{% endif %}{% if block.settings.border_color_title != blank and block.settings.border_color_title != 'rgba(0,0,0,0)' %} enable_border_color{% endif %}{% if block.settings.enable_des_hover %} enable_des_hover{% endif %}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}" {% if settings.banner_animation == 'effect_fade_up' %} data-cascade style="--animation-order: {{ forloop.index }};"{% endif %}>
                             {%- if block.settings.enable_image -%}
-                                <div class="image-container">
+                                <div class="image-container" style="position: relative;">
                                     <div class="img-box{% if block.settings.image_behavior != 'none' %} animate--{{ block.settings.image_behavior }} o-hidden{% endif %}">
                                         {%- if block.settings.image != blank -%}
                                             {%- assign preview_img = block.settings.image -%}
@@ -69,6 +69,11 @@
                                             <span class="show-icon-more" style="--color-icon-plus: {{ section.settings.color_plus_icon }}"></span>
                                         {%- endif -%}
                                     </div>
+                                    {%- if block.settings.custom_shadow_image != blank -%}
+                                      <div class="spotlight-custom-shadow" style="width: {{ block.settings.custom_shadow_width }}%; opacity: {{ block.settings.custom_shadow_opacity | divided_by: 100.0 }};">
+                                        <img src="{{ block.settings.custom_shadow_image | image_url: width: 600 }}" alt="sombra" loading="lazy">
+                                      </div>
+                                    {%- endif -%}
                                 </div>
                             {%- endif -%}
                             {%- if block.settings.sub_title != blank or block.settings.title != blank or block.settings.des != blank or block.settings.button != blank -%}
@@ -137,6 +142,15 @@
     </div>
     
     <style>
+        /* Animación flotante - solo para .img-box del producto */
+        @keyframes floatProduct {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-15px); }
+        }
+        .section-block-{{ section.id }} .img-box {
+            animation: floatProduct 1.8s ease-in-out infinite alternate;
+        }
+
         {%- liquid
             assign spotlight_bg = section.settings.spotlight_bg
             assign spotlight_bg_gradient = section.settings.spotlight_bg_gradient
@@ -353,7 +367,7 @@
 {
     "name": "t:sections.spotlight_block.presets.section",
     "class": "sections-spotlight-block",
-    "max_blocks": 4,
+    "max_blocks": 10,
     "settings": [
     {
         "type": "header",
@@ -1556,6 +1570,36 @@
             "type" : "color_background",
             "id" : "bg_color_button_gradient_hover",
             "label": "t:sections.rich-text.blocks.button.settings.button_bg_gradient_hover"
+        },
+        {
+            "type": "header",
+            "content": "Sombra personalizada"
+        },
+        {
+            "type": "image_picker",
+            "id": "custom_shadow_image",
+            "label": "Imagen de sombra (opcional)",
+            "info": "Sube un PNG de la sombra especifica para este producto."
+        },
+        {
+            "type": "range",
+            "id": "custom_shadow_width",
+            "label": "Ancho de la sombra (%)",
+            "min": 20,
+            "max": 120,
+            "step": 5,
+            "unit": "%",
+            "default": 80
+        },
+        {
+            "type": "range",
+            "id": "custom_shadow_opacity",
+            "label": "Opacidad de la sombra",
+            "min": 10,
+            "max": 100,
+            "step": 5,
+            "unit": "%",
+            "default": 80
         }]
     },
     {
@@ -1880,6 +1924,36 @@
             "default": "none",
             "info": "t:sections.main-product.settings.general.image_behavior.info",
             "label": "t:sections.main-product.settings.general.image_behavior.label"
+        },
+        {
+            "type": "header",
+            "content": "Sombra personalizada"
+        },
+        {
+            "type": "image_picker",
+            "id": "custom_shadow_image",
+            "label": "Imagen de sombra (opcional)",
+            "info": "Sube un PNG de la sombra especifica para este producto."
+        },
+        {
+            "type": "range",
+            "id": "custom_shadow_width",
+            "label": "Ancho de la sombra (%)",
+            "min": 20,
+            "max": 120,
+            "step": 5,
+            "unit": "%",
+            "default": 80
+        },
+        {
+            "type": "range",
+            "id": "custom_shadow_opacity",
+            "label": "Opacidad de la sombra",
+            "min": 10,
+            "max": 100,
+            "step": 5,
+            "unit": "%",
+            "default": 80
         }]
     }],
     "presets": [

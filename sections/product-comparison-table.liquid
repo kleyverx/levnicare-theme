@@ -8,11 +8,6 @@
     --wave-color: {{ section.settings.wave_color | default: '#e05060' }};
     --title-color: {{ section.settings.title_color | default: '#000000' }};
     --subtitle-color: {{ section.settings.subtitle_color | default: '#666666' }};
-    --mint-bg: {{ section.settings.col_body_bg | default: '#c8f7d8' }};
-    --mint-header: {{ section.settings.col_header_bg | default: '#b8f5ca' }};
-    --green-badge: {{ section.settings.col_badge_bg | default: '#25a85b' }};
-    --badge-text-color: {{ section.settings.col_badge_text | default: '#ffffff' }};
-    --pink-border: {{ section.settings.border_color | default: '#f0a0a8' }};
   }
 {%- endstyle -%}
 
@@ -56,7 +51,17 @@
               assign product_name = block.settings.product_name | default: product_ours.title | default: 'Levnicare'
               assign comp_name = block.settings.comp_name | default: 'Otros'
             -%}
-            <div class="comp-v3-slide" {{ block.shopify_attributes }}>
+            <div
+              class="comp-v3-slide"
+              {{ block.shopify_attributes }}
+              style="
+                --mint-bg: {{ block.settings.col_body_bg | default: '#c8f7d8' }};
+                --mint-header: {{ block.settings.col_header_bg | default: '#b8f5ca' }};
+                --green-badge: {{ block.settings.col_badge_bg | default: '#25a85b' }};
+                --badge-text-color: {{ block.settings.col_badge_text | default: '#ffffff' }};
+                --pink-border: {{ block.settings.border_color | default: '#f0a0a8' }};
+              "
+            >
               <div class="comp-v3-wave">
                 <svg viewBox="0 0 1000 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                   <!-- Wave 1 (Back) -->
@@ -79,7 +84,9 @@
                     <tr>
                       <th><!-- Spacer --></th>
                       <th class="th-ours">
-                        <div class="comp-v3-badge">{{ section.settings.badge_text }}</div>
+                        {%- if block.settings.badge_text != blank -%}
+                          <div class="comp-v3-badge">{{ block.settings.badge_text }}</div>
+                        {%- endif -%}
                         {%- if product_img != blank -%}
                           {{
                             product_img
@@ -227,12 +234,7 @@
       "label": "Subtítulo",
       "default": "Compara nuestros productos con la competencia"
     },
-    {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Texto del Badge",
-      "default": "MEJOR OPCIÓN"
-    },
+
     {
       "type": "range",
       "id": "title_size",
@@ -254,40 +256,6 @@
       "id": "subtitle_color",
       "label": "Color Subtítulo",
       "default": "#666666"
-    },
-    {
-      "type": "header",
-      "content": "Estilo Columna 'Mejor Opción'"
-    },
-    {
-      "type": "color",
-      "id": "col_header_bg",
-      "label": "Fondo Cabecera",
-      "default": "#b8f5ca"
-    },
-    {
-      "type": "color",
-      "id": "col_body_bg",
-      "label": "Fondo Cuerpo Columna",
-      "default": "#c8f7d8"
-    },
-    {
-      "type": "color",
-      "id": "col_badge_bg",
-      "label": "Fondo Badge (Mejor Opción)",
-      "default": "#25a85b"
-    },
-    {
-      "type": "color",
-      "id": "col_badge_text",
-      "label": "Color Texto Badge",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "border_color",
-      "label": "Color de Bordes",
-      "default": "#f0a0a8"
     },
     {
       "type": "header",
@@ -392,6 +360,46 @@
         {
           "type": "header",
           "content": "Características (Máx 4)"
+        },
+        {
+          "type": "header",
+          "content": "Estilo 'Mejor Opción'"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Texto del Badge",
+          "default": "MEJOR OPCIÓN"
+        },
+        {
+          "type": "color",
+          "id": "col_header_bg",
+          "label": "Fondo Cabecera",
+          "default": "#F88573"
+        },
+        {
+          "type": "color",
+          "id": "col_body_bg",
+          "label": "Fondo Cuerpo Columna",
+          "default": "#FFA091"
+        },
+        {
+          "type": "color",
+          "id": "col_badge_bg",
+          "label": "Fondo Badge (Mejor Opción)",
+          "default": "#E95144"
+        },
+        {
+          "type": "color",
+          "id": "col_badge_text",
+          "label": "Color Texto Badge",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Color de Bordes",
+          "default": "#e09098"
         },
         {
           "type": "text",

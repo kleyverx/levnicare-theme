@@ -125,7 +125,7 @@
   background: #fff;
   position: relative;
   z-index: 10;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); /* Softer, elegant shadow */
   overflow: visible;
   transition:
     transform 0.4s ease,
@@ -140,7 +140,7 @@
 
 .comp-v3-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08); /* Gentle lift on hover */
 }
 
 /* Row Stagger Animation */
@@ -195,7 +195,7 @@
   height: 75px;
   padding: 15px;
   text-align: center;
-  border-bottom: 1px solid #fceef0;
+  border-bottom: 1px solid var(--pink-border); /* Fixed: Use dynamic variable */
   vertical-align: middle;
   box-sizing: border-box;
   position: relative;
@@ -227,38 +227,55 @@
   background-color: var(--mint-header) !important;
   border-left: 1px solid var(--pink-border);
   border-right: 1px solid var(--pink-border);
-  padding-top: 45px !important;
+  /* padding-top: 45px !important;  <-- Removed this causing the drop */
+  position: relative; /* Ensure stacking context */
+}
+
+/* Restored Recuadro (Box Extension) */
+.th-ours::before {
+  content: "";
+  position: absolute;
+  bottom: 100%; /* Push up */
+  left: -1px;
+  right: -1px;
+  height: 60px; /* The 'Recuadro' height */
+  background: var(--mint-header);
+  border: 1px solid var(--pink-border);
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  z-index: 0;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.02); /* Gentle lift */
 }
 
 .comp-v3-badge {
   position: absolute;
-  top: -80px; /* Further extended for desktop */
-  bottom: 100%;
-  left: -1.5px;
-  right: -1.5px;
-  background: var(--green-badge, #25a85b);
+  top: -60px; /* Sit right on top of the Recuadro */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--green-badge, #e95144);
   color: var(--badge-text-color, #fff);
-  font-size: 12px;
-  font-weight: 800;
-  height: 110px;
+  font-size: 14px; /* Larger text */
+  font-weight: 900;
+  letter-spacing: 1px;
+  height: auto;
+  min-width: 160px; /* Wider pill */
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding-bottom: 10px;
+  padding: 10px 20px;
   text-transform: uppercase;
-  z-index: 5;
-  border: 1px solid var(--pink-border);
-  border-bottom: 1px solid var(--pink-border);
-  border-radius: 18px 18px 0 0;
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+  z-index: 20;
+  border-radius: 50px;
+  box-shadow: 0 8px 20px rgba(233, 81, 68, 0.4); /* Colored glow for "resaltante" */
+  border: 2px solid #fff; /* White border to separate from background */
+  white-space: nowrap;
 }
 
 /* Popping Images */
+/* Popping Images - Base Styles */
 .comp-v3-img-pop {
   position: absolute;
-  bottom: 100%; /* Back to the table edge */
   left: 50%;
-  transform: translateX(-50%) rotate(0deg) scale(1);
   width: 90%;
   height: auto;
   aspect-ratio: 500 / 570;
@@ -288,14 +305,18 @@
   opacity: 1;
 }
 
+/* Creating independent positioning for each image type */
 .comp-v3-img-ours {
   z-index: 15;
-  max-height: 300px; /* Even larger */
+  max-height: 290px;
+  bottom: calc(100% + 45px); /* Lifted higher above the badge/box */
 }
+
 .comp-v3-img-comp {
   z-index: 14;
   max-height: 180px;
   opacity: 0.95;
+  bottom: 100%; /* Sits exactly on top of the table border */
 }
 
 /* Row Styling */
@@ -309,6 +330,7 @@
   background-color: var(--mint-bg);
   border-left: 1px solid var(--pink-border);
   border-right: 1px solid var(--pink-border);
+  border-bottom: none !important; /* Removed internal lines as requested */
 }
 
 .comp-v3-table tr:last-child td {
@@ -393,26 +415,32 @@
     font-size: 26px;
     margin-bottom: 10px;
   }
+
+  /* Increase top padding to fit the lifted elements */
   .comp-v3-slide {
-    padding-top: 240px; /* Space for even larger mobile images */
+    padding-top: 210px; /* Reduced further to close gap significantly */
   }
+
   .comp-v3-wave {
-    height: 200px;
-    width: calc(100% - 40px);
+    height: 160px; /* Reduced wave height */
+    width: calc(100% - 30px);
   }
-  .comp-v3-img-pop {
-    width: 95%; /* Slightly larger relative size on mobile */
-  }
+
+  /* Mobile specific positioning */
   .comp-v3-img-ours {
-    max-height: 280px; /* Even larger on mobile */
+    max-height: 480px; /* Massive size as requested */
+    width: auto;
+    bottom: calc(100% + 50px);
   }
   .comp-v3-img-comp {
-    max-height: 160px;
+    max-height: 120px; /* Reduced competitor slightly for contrast */
+    bottom: 100%; /* Sits exactly on the border on mobile too */
   }
+
   .comp-v3-nav-btn {
     width: 36px;
     height: 36px;
-    top: 60%;
+    top: 55%; /* Adjusted nav btns */
   }
   .comp-v3-nav-btn svg {
     width: 12px;
@@ -427,23 +455,30 @@
 
   .comp-v3-table th,
   .comp-v3-table td {
-    padding: 12px 6px;
+    padding: 10px 4px; /* Slightly tighter cell padding */
     font-size: 13px;
     height: auto;
     min-height: 60px;
   }
+
+  /* Adjust Recuadro for Mobile */
   .th-ours {
-    padding-top: 40px !important;
+    padding-top: 25px !important; /* Push text down a bit ("muy arriba") */
   }
+  .th-ours::before {
+    height: 40px; /* Slightly smaller box on mobile */
+  }
+
   .comp-v3-badge {
-    font-size: 10px;
-    height: 85px; /* More extended background on mobile */
-    top: -55px;
-    display: flex;
-    align-items: flex-end;
-    padding-bottom: 5px;
-    border-radius: 12px 12px 0 0;
+    font-size: 11px;
+    height: auto;
+    min-width: 90px;
+    padding: 6px 10px;
+    top: -40px; /* Sit top of the smaller mobile box */
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(233, 81, 68, 0.3);
   }
+
   .comp-v3-seal {
     width: 28px;
     height: 28px;

@@ -252,7 +252,7 @@
       style="
         --section_margin: {{ list_gap }}; --mg_top_desktop: {{ mg_top_desktop | append: 'px' }};--mg_top_tablet:{{ mg_top_tablet | append: 'px' }};--mg_top_mobile: {{ mg_top_mobile | append: 'px' }};--mg_bottom_desktop:{{ mg_bottom_desktop | append: 'px' }};--mg_bottom_tablet:{{ mg_bottom_tablet | append: 'px' }};--mg_bottom_mobile:{{ mg_bottom_mobile | append: 'px' }};--padding_full_width:{{ padding_full_width | append: 'px' }};
         {%- if section.settings.bg_image != blank -%}
-            background: url({{ section.settings.bg_image | img_url: '1920x' }});background-repeat: no-repeat;background-size: cover;
+            background: url({{ section.settings.bg_image | image_url: width: 3840 }});background-repeat: no-repeat;background-size: cover;
         {%- else -%}
         --bg-color-style: {% if section.settings.bg_color_gradient != blank %}{{ section.settings.bg_color_gradient }}{% else %}{{ section.settings.bg_color }}{% endif %}{%- endif -%}
       "
@@ -881,13 +881,13 @@
                             {%- assign height = image.width | divided_by: image.aspect_ratio | round -%}
                             {{
                               image
-                              | image_url: width: 1920
+                              | image_url: width: 3840
                               | image_tag:
                                 loading: 'lazy',
                                 class: lazy,
                                 height: height,
                                 sizes: '100vw',
-                                widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                             }}
                             {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                           </a>
@@ -950,13 +950,13 @@
                             -%}
                             {{
                               smallImg_image_2
-                              | image_url: width: 1920
+                              | image_url: width: 3840
                               | image_tag:
                                 loading: 'lazy',
                                 class: lazy,
                                 height: heightImg2,
                                 sizes: '100vw',
-                                widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                             }}
                             {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                           </a>
@@ -979,13 +979,13 @@
                             -%}
                             {{
                               smallImg_image_3
-                              | image_url: width: 1920
+                              | image_url: width: 3840
                               | image_tag:
                                 loading: 'lazy',
                                 class: lazy,
                                 height: heightImg3,
                                 sizes: '100vw',
-                                widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                             }}
                             {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                           </a>
@@ -1151,13 +1151,13 @@
                               {%- assign height = image.width | divided_by: image.aspect_ratio | round -%}
                               {{
                                 image
-                                | image_url: width: 1920
+                                | image_url: width: 3840
                                 | image_tag:
                                   loading: 'lazy',
                                   class: lazy,
                                   height: height,
                                   sizes: '100vw',
-                                  widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                  widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                               }}
                               {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                             </a>
@@ -1289,13 +1289,13 @@
                               -%}
                               {{
                                 image_item_2
-                                | image_url: width: 1920
+                                | image_url: width: 3840
                                 | image_tag:
                                   loading: 'lazy',
                                   class: lazy,
                                   height: heightItem2,
                                   sizes: '100vw',
-                                  widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                  widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                               }}
                               {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                             </a>
@@ -1425,13 +1425,13 @@
                             {%- assign height_dsk = image.width | divided_by: image.aspect_ratio | round -%}
                             {{
                               image
-                              | image_url: width: 1920
+                              | image_url: width: 3840
                               | image_tag:
                                 loading: 'lazy',
                                 class: lazy,
                                 height: height_dsk,
                                 sizes: '100vw',
-                                widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                             }}
                             {%- if settings.enable_lazyload -%}<span class="data-lazy-loading"></span>{%- endif -%}
                           </a>
@@ -1466,13 +1466,13 @@
                             -%}
                             {{
                               mobile_image
-                              | image_url: width: 1920
+                              | image_url: width: 3840
                               | image_tag:
                                 loading: 'lazy',
                                 class: lazy,
                                 height: height_mb,
                                 sizes: '100vw',
-                                widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                             }}
                             {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif -%}
                             ></a
@@ -1492,13 +1492,13 @@
                               {%- assign height_mb = image.width | divided_by: image.aspect_ratio | round -%}
                               {{
                                 image
-                                | image_url: width: 1920
+                                | image_url: width: 3840
                                 | image_tag:
                                   loading: 'lazy',
                                   class: lazy,
                                   height: height_mb,
                                   sizes: '100vw',
-                                  widths: '375, 550, 750, 1100, 1500, 1780, 1920'
+                                  widths: '375, 550, 750, 1100, 1500, 1780, 1920, 2560, 3840'
                               }}
                               {% if settings.enable_lazyload %}<span class="data-lazy-loading"></span>{% endif -%}
                               ></a

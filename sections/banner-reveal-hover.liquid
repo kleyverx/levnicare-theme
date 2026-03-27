@@ -89,7 +89,7 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     // Referencias a los elementos
     const sectionElement = document.getElementById('banner-reveal-{{ section.id }}');
     const bannersContainer = document.querySelector('#banners-{{ section.id }}');
@@ -184,10 +184,7 @@
         const rect = el.getBoundingClientRect();
         const windowHeight = window.innerHeight || document.documentElement.clientHeight;
         // Cuando el elemento está 30% visible en la pantalla
-        return (
-          rect.top <= windowHeight * 0.7 &&
-          rect.bottom >= 0
-        );
+        return rect.top <= windowHeight * 0.7 && rect.bottom >= 0;
       }
 
       // Función para manejar el evento de scroll
@@ -220,7 +217,7 @@
 
     // Adaptar al redimensionamiento con debounce
     let resizeTimer;
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         // Recargar la página para reiniciar correctamente si cambió entre móvil y desktop
@@ -234,8 +231,8 @@
     // Hacer que la animación se active cuando la sección aparezca por primera vez
     // (para cuando el usuario ya ha hecho scroll hacia abajo antes de que la página cargue)
     if (isMobile) {
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
+      document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
           // Disparar un evento de scroll para verificar la posición inicial
           window.dispatchEvent(new Event('scroll'));
         }, 500);
@@ -290,7 +287,7 @@
     height: 3px;
     width: 60px;
     background-color: {{ section.settings.second_title_color }};
-    margin: 15px auto 20px; /* Centrado */
+    margin: 15px 0 20px; /* Alineado a la izquierda */
     opacity: 0.7;
   }
 
@@ -358,7 +355,7 @@
     }
   }
 
-  /* Contenido centrado */
+  /* Contenido centrado con texto a la izquierda */
   .content-overlay {
     position: absolute;
     top: 0;
@@ -369,22 +366,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 20px; /* Espaciado horizontal reducido */
+    padding: 0 20px;
     z-index: 5;
   }
 
   .content-box {
     background-color: {{ section.settings.content_bg_color }};
     border-radius: 10px;
-    padding: 30px;
+    padding: 40px 50px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     width: 100%;
-    max-width: 500px; /* Ancho aumentado para mejor legibilidad */
+    max-width: 750px;
     margin: 0 auto;
     transform-origin: center;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0.9;
-    text-align: center; /* Todo centrado */
+    text-align: left;
   }
 
   /* Animación del contenido en hover */
@@ -400,7 +397,7 @@
     margin-top: 0;
     margin-bottom: 0;
     line-height: 1.2;
-    text-align: center; /* Centrado */
+    text-align: left;
   }
 
   .second-banner-text {
@@ -408,13 +405,29 @@
     font-size: {{ section.settings.second_text_size }}px;
     line-height: 1.6;
     margin-bottom: 20px;
-    text-align: center; /* Centrado */
+    text-align: left;
   }
 
   .second-banner-text p {
     margin-top: 0;
+    margin-bottom: 10px;
+    text-align: left;
+    color: inherit;
+  }
+
+  .second-banner-text p:last-child {
     margin-bottom: 0;
-    text-align: center; /* Centrado */
+  }
+
+  .second-banner-text h1,
+  .second-banner-text h2,
+  .second-banner-text h3,
+  .second-banner-text h4,
+  .second-banner-text h5,
+  .second-banner-text h6 {
+    color: inherit;
+    margin-top: 0;
+    margin-bottom: 8px;
   }
 
   .banner-button {
@@ -485,34 +498,44 @@
       font-size: calc({{ section.settings.title_size_mobile }}px * 0.6);
     }
 
+    .content-overlay {
+      justify-content: center;
+      padding: 0 15px;
+    }
+
     .content-box {
-      padding: 20px;
+      padding: 22px 20px;
       max-width: 90%;
+      margin: 0 auto;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       opacity: 1;
+      text-align: center; /* Centrado en móvil para mejor lectura */
     }
 
     .second-banner-title {
       font-size: {{ section.settings.second_title_size_mobile }}px;
+      text-align: center;
     }
 
     .content-divider {
-      margin: 10px auto 15px; /* Centrado */
+      margin: 10px auto 15px;
       width: 50px;
       height: 2px;
     }
 
-    .second-banner-text {
+    .second-banner-text,
+    .second-banner-text p {
       font-size: {{ section.settings.second_text_size_mobile }}px;
       margin-bottom: 15px;
+      text-align: center;
     }
 
     .banner-button {
       padding: 12px 22px;
-      width: 80%; /* No ocupando el 100% para mejor apariencia */
+      width: 80%;
       text-align: center;
-      margin: 0 auto; /* Centrar */
-      display: block; /* Asegurar que ocupe su propio espacio */
+      margin: 0 auto;
+      display: block;
     }
   }
 
@@ -523,8 +546,8 @@
     }
 
     .content-box {
-      padding: 25px;
-      max-width: 450px; /* Algo más limitado para tablets */
+      padding: 30px 40px;
+      max-width: 750px;
     }
 
     .second-banner-title {
@@ -543,7 +566,7 @@
     }
 
     .content-box {
-      max-width: 600px; /* Más ancho para pantallas grandes */
+      max-width: 750px;
     }
   }
 
