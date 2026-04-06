@@ -199,8 +199,8 @@
   </style>
 
   <div
-    class="image-comparison section-block-{{section.id}}{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
-    id="image-comparison-{{section.id}}"
+    class="image-comparison section-block-{{ section.id }} {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
+    id="image-comparison-{{ section.id }}"
     style="--section-bg: {% if section_gradient != blank %}{{ section_gradient }}{% elsif section_bg != blank %}{{ section_bg }}{% endif %};"
   >
     <div class="{{ container }}">
@@ -209,7 +209,7 @@
         <div class="section-text-centered" style="text-align: center; margin-bottom: 2rem;">
           {% if section_subtitle != blank %}
             <h4
-              class="subtitle{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
+              class="subtitle {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
               style="
                 {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 0;{% endif %}
                 --subtitle-font-size: {{ section_subtitle_font_size }};
@@ -226,7 +226,7 @@
           {% endif %}
           {% if section_title != blank %}
             <h3
-              class="title{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
+              class="title {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
               style="
                 {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 1;{% endif %}
                 --title-font-size: {{ section_title_font_size }};
@@ -248,7 +248,7 @@
           {% endif %}
           {% if section_description != blank %}
             <div
-              class="description{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
+              class="description {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
               style="
                 {% if settings.banner_animation == 'effect_fade_up' %}--animation-order: 2;{% endif %}
                 --description-font-size: {{ section_description_font_size }};
@@ -272,7 +272,7 @@
       <div class="section-content content-position-{{ section.settings.content_position }}">
         <image-comparison-component class="section-images">
           <div
-            class="images-container{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
+            class="images-container {% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--fade-in{% endif %}"
             data-images-container
             style="--left-pos: 50%"
           >
@@ -286,7 +286,7 @@
                 <img
                   width="{{ image_after.width }}"
                   height="{{ image_after.height }}"
-                  {% render 'lazyload', preview_img: image_after -%}
+                  {% render 'lazyload', preview_img: image_after %}
                   {% unless image_after.presentation.focal_point == '50.0% 50.0%' %}
                     style="object-position: {{ image_after.presentation.focal_point }}"
                   {% endunless %}
@@ -326,7 +326,7 @@
                 <img
                   width="{{ image_before.width }}"
                   height="{{ image_before.height }}"
-                  {% render 'lazyload', preview_img: image_before -%}
+                  {% render 'lazyload', preview_img: image_before %}
                   {% unless image_before.presentation.focal_point == '50.0% 50.0%' %}
                     style="object-position: {{ image_before.presentation.focal_point }}"
                   {% endunless %}
@@ -341,7 +341,7 @@
                 class="adaptive_height compare-image-overlay placeholder compare-image"
                 style="--height_placeholder: 750px;"
               >
-                {{ 'product-apparel-2' | placeholder_svg_tag: ' placeholder-svg' }}
+                {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
               </div>
             {% endif %}
 
@@ -356,7 +356,7 @@
                 <img
                   width="{{ image_after_mobile.width }}"
                   height="{{ image_after_mobile.height }}"
-                  {% render 'lazyload', preview_img: image_after_mobile -%}
+                  {% render 'lazyload', preview_img: image_after_mobile %}
                 >
                 {% if label_after != blank %}
                   <span class="comparison-label label-despues">{{ label_after }}</span>
@@ -370,7 +370,7 @@
                 <img
                   width="{{ image_before_mobile.width }}"
                   height="{{ image_before_mobile.height }}"
-                  {% render 'lazyload', preview_img: image_before_mobile -%}
+                  {% render 'lazyload', preview_img: image_before_mobile %}
                 >
                 {% if label_before != blank %}
                   <span class="comparison-label label-antes">{{ label_before }}</span>

@@ -131,4 +131,9 @@
       </dd>
     </small>
   </dl>
+  {%- if product.tags contains 'launch-price' -%}
+    <div class="price__launch-badge">
+        <span class="badge launch-badge">Precio de lanzamiento</span>
+    </div>
+  {%- endif -%}
 </div>
