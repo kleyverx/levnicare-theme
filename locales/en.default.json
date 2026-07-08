@@ -285,6 +285,7 @@
       "custom": "Custom label",
       "new": "New",
       "bundle": "Bundle",
+      "low_stock": "Low stock",
       "unavailable": "Unavailable",
       "unavailable_message": "This variant is unavailable!",
       "value_unavailable": "{{ option_value }} (unavailable)",

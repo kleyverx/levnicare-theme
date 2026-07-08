@@ -51,6 +51,11 @@
     background-color: var(--bundle-badge-bg);
 }
 
+.halo-productBadges .badge.low-stock-badge{
+    color: var(--low-stock-badge-color, #ffffff);
+    background-color: var(--low-stock-badge-bg, #e07a1f);
+}
+
 .halo-productBadges .badge + .badge{
     margin-top: 5px;
 }
